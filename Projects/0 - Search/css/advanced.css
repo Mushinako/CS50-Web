@@ -1,0 +1,69 @@
+h1 {
+    font-weight: normal;
+}
+
+hr {
+    border: 0;
+    border-bottom: 1px solid #ebebeb;
+}
+
+.title {
+    color: #d93025;
+    font-size: 20px;
+    margin: 25px 35px;
+}
+
+.search-form {
+    max-width: 1140px;
+    margin: 40px 30px 0 45px;
+    display: grid;
+    grid-auto-rows: 1fr;
+    grid-template-columns: max-content auto 350px;
+    align-items: center;
+    row-gap: 0.5rem;
+    column-gap: 1rem
+}
+
+.search-form input[type="submit"] {
+    height: 30px;
+    min-width: 120px;
+    text-align: center;
+    color: #fff;
+    background-color: #4d90fe;
+    /* box-shadow: none; */
+    font-size: 11px;
+    font-weight: bold;
+    border: 1px solid #3079ed;
+}
+
+.search-form input:not([type="submit"]) {
+    width: calc(100% - 16px);
+    height: 25px;
+    border: 1px solid #d9d9d9;
+    padding: 0 8px;
+}
+
+.form-title {
+    color: #333;
+    font-size: 16px;
+}
+
+.form-eg-title {
+    color: #777;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.form-label {
+    color: #222;
+    font-size: 13px;
+}
+
+.form-eg {
+    color: #555;
+    font-size: 11px;
+}
+
+.colspan-2 {
+    grid-column-end: span 2;
+}

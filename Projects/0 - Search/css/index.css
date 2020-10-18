@@ -1,0 +1,19 @@
+nav {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+}
+
+main {
+    text-align: center;
+}
+
+form input:not([type="submit"]) {
+    background-color: #fff;
+    border: 1px solid #dfe1e5;
+    height: 36px;
+    padding: 4px 16px;
+    font-size: 16px;
+    border-radius: 24px;
+}

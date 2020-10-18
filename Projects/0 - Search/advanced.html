@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Search</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/advanced.css">
+</head>
+
+<body>
+    <nav>
+        <div>
+            <a href="index.html">Search</a>
+        </div>
+    </nav>
+    <main>
+        <h1 class="title">Advanced Search</h1>
+        <hr>
+        <form action="https://google.com/search" class="search-form">
+            <div class="colspan-2 form-title">Find pages with...</div>
+            <div class="form-eg-title">To do this in the search box</div>
+
+            <div class="form-label">all these words:</div>
+            <div>
+                <input type="text" name="as_q" autocapitalize="off" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="form-eg">Type the important words: <code>tricolor rat terrier</code></div>
+
+            <div class="form-label">this exact word or phrase:</div>
+            <div>
+                <input type="text" name="as_epq" autocapitalize="off" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="form-eg">Put exact words in quotes: <code>"rat terrier"</code></div>
+
+            <div class="form-label">any of these words:</div>
+            <div>
+                <input type="text" name="as_oq" autocapitalize="off" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="form-eg">Type <code>OR</code> between all the words you want: <code>miniature OR standard</code>
+            </div>
+
+            <div class="form-label">none of these words:</div>
+            <div>
+                <input type="text" name="as_eq" autocapitalize="off" autocomplete="off" spellcheck="false">
+            </div>
+            <div class="form-eg">Put a minus sign just before words you don't want: <code>-rodent, -"Jack
+                    Russell"</code></div>
+
+            <div class="colspan-2 right-align">
+                <input type="submit" value="Advanced Search">
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>
