@@ -29,10 +29,15 @@ textarea {
 
 .sidebar {
     background-color: #f0f0f0;
-    height: 100vh;
     padding: 20px;
 }
 
 .sidebar h2 {
     margin-top: 5px;
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        height: 100vh;
+    }
 }

@@ -1,0 +1,9 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Search result for {{ query|stringformat:'r' }}
+{% endblock %}
+
+{% block body %}
+    <h1>Search for {{ query|stringformat:'r' }} returned no match!</h1>
+{% endblock %}

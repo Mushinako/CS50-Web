@@ -1,0 +1,12 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    400 Bad Request
+{% endblock %}
+
+{% block body %}
+    <h1>Invalid request: {{ url|stringformat:'r' }}</h1>
+    {% if query is not None %}
+        <h2>Query: {{ query|stringformat:'r' }}</h2>
+    {% endif %}
+{% endblock %}

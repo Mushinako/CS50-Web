@@ -1,0 +1,27 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Wiki Editor
+{% endblock %}
+
+{% block body %}
+    <h1>Wiki editor</h1>
+
+    <form method="POST" action="{{ url }}">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.label_tag is not None %}
+                <div>
+                    {{ field.label_tag }}
+                </div>
+            {% endif %}
+            <div>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <div>
+            <input type="submit" value="Save">
+        </div>
+    </form>
+
+{% endblock %}
