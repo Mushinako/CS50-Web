@@ -56,6 +56,7 @@ def wikipage(request: HttpRequest, title: str) -> HttpResponse:
     return render(request, "encyclopedia/wikipage.html", {
         "title": title,
         "content": content_html,
+        "from": title,
     })
 
 
@@ -93,6 +94,10 @@ def random_page(request: HttpRequest) -> HttpResponse:
     Redirect to a random page
     """
     entries = util.list_entries()
+    from_ = request.GET["from"]
+    # Avoid navigating back to same page
+    if from_ in entries:
+        entries.remove(from_)
     rand = random.choice(entries)
     return HttpResponseRedirect(reverse("wikipage", kwargs={"title": rand}))
 
