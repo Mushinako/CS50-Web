@@ -1,20 +1,22 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
+from django.http.request import HttpRequest
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 
 from .models import User, Listing
 
 
-def index(request):
-    active_listings = Listing.objects.filter(active=True)
+def index(request: HttpRequest) -> HttpResponse:
+    listings = Listing.objects.all()
     return render(request, "auctions/index.html", {
-        "listings": active_listings,
+        "listings": listings,
     })
 
 
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -34,12 +36,12 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 
-def logout_view(request):
+def logout_view(request) -> HttpResponse:
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
-def register(request):
+def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
@@ -64,3 +66,35 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+
+def listing(request: HttpRequest, id_: str) -> HttpResponse:
+    """
+    Listing details page
+    """
+    try:
+        id_ = int(id_)
+        lt = Listing.objects.get(id=id_)
+    except (ValueError, Listing.DoesNotExist) as err:
+        return _404(request, err)
+    watching = False
+    return render(request, "auctions/listing.html", {
+        "lt": lt,
+        "watching": watching,
+    })
+
+
+def watch_remove(request: HttpRequest) -> HttpResponse:
+    """
+    Remove item from watchlist
+    """
+
+
+def watch_add(request: HttpRequest) -> HttpResponse:
+    """
+    Add item to watchlist
+    """
+
+
+def _404(request: HttpRequest, exception=None) -> HttpResponse:
+    return HttpResponseRedirect(reverse("index"))

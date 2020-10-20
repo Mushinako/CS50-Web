@@ -1,0 +1,42 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block title %}
+{{ lt.title }}
+{% endblock%}
+
+{% block head %}
+    <link href="{% static 'auctions/listing.css' %}" rel="stylesheet">
+{% endblock%}
+
+{% block body %}
+    {% if lt %}
+        <div>
+            <h2>Listing: {{ lt.title }}</h2>
+            {% if watching %}
+                <form action="{% url 'watch_remove' %}" method="POST" class="watching">
+                    <input type="hidden" name="id_" value="{{ lt.id }}">
+                    <input type="submit" value="Remove from watchlist">
+                </form>
+            {% else %}
+                <form action="{% url 'watch_add' %}" method="POST" class="watching">
+                    <input type="hidden" name="id_" value="{{ lt.id }}">
+                    <input type="submit" value="Add to watchlist">
+                </form>
+            {% endif %}
+            {% if lt.image_url %}
+                <img src="{{ lt.image_url }}" alt="{{ lt.title }}">
+            {% endif %}
+            <div class="listing-price">${{ lt.get_max_bid }}</div>
+            {% if lt.description %}
+                <div class="listing-description">{{ lt.description }}</div>
+            {% endif %}
+            {% comment %} <div class="listing-time">
+                <span class="prefix">Created </span>
+                <span class="content">{{ lt.get_time_str }}</span>
+            </div> {% endcomment %}
+        </div>
+    {% else %}
+        <h2>Requested listing does not exist!</h2>
+    {% endif %}
+{% endblock %}

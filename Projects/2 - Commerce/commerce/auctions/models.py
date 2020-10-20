@@ -14,7 +14,6 @@ class Category(models.Model):
 
 
 class Listing(models.Model):
-    active = models.BooleanField(default=True)
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=1024, blank=True)
     starting_bid = models.PositiveIntegerField()
@@ -31,7 +30,7 @@ class Listing(models.Model):
         max_amount = bids.aggregate(models.Max("amount"))["amount__max"]
         if max_amount is None:
             max_amount = self.starting_bid
-        return f"{max_amount/100:.2f}"
+        return f"{max_amount/100:,.2f}"
 
     def get_time_str(self) -> str:
         time: datetime = self.creation_time
@@ -40,10 +39,15 @@ class Listing(models.Model):
 
 class User(AbstractUser):
     watchlist = models.ManyToManyField(
-        Listing, related_name="watched_by", blank=True)
+        Listing, related_name="watched_by", blank=True, through="Watch")
 
     def __str__(self) -> str:
         return f"{self.username}"
+
+
+class Watch(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
