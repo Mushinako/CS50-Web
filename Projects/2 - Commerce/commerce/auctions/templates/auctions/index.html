@@ -3,5 +3,31 @@
 {% block body %}
     <h2>Active Listings</h2>
 
-    TODO
+    <div>
+        {% for lt in listings %}
+            <div>
+                <div class="listing-left">
+                    {% if lt.image_url %}
+                        <img src="{{ lt.image_url }}" alt="{{ lt.title }}">
+                    {% endif %}
+                </div>
+                <div class="listing-right">
+                    <div class="listing-title">{{ lt.title }}</div>
+                    <div class="listing-price-container">
+                        <span class="listing-price-prefix">Price: </span>
+                        <span class="listing-price">${{ lt.get_max_bid() }}</span>
+                    </div>
+                    {% if lt.description %}
+                    <div class="listing-description">{{ lt.description }}</div>
+                    {% endif %}
+                    <div class="listing-time">
+                        <span class="listing-time-prefix">Created </span>
+                        <span class="listing-time">${{ lt.creation_time.strftime("%c") }}</span>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <span class="no-listings">No listings yet</span>
+        {% endfor %}
+    </div>
 {% endblock %}
