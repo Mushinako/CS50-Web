@@ -5,8 +5,9 @@ from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.defaults import bad_request, page_not_found, permission_denied
 
-from .models import User, Listing
+from .models import User, Listing, Watch
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -77,24 +78,60 @@ def listing(request: HttpRequest, id_: str) -> HttpResponse:
         lt = Listing.objects.get(id=id_)
     except (ValueError, Listing.DoesNotExist) as err:
         return _404(request, err)
-    watching = False
+    watches: User.objects = lt.watched_by
+    watching = watches.filter(id=request.user.id).exists()
     return render(request, "auctions/listing.html", {
         "lt": lt,
         "watching": watching,
     })
 
 
-def watch_remove(request: HttpRequest) -> HttpResponse:
+def watch(request: HttpRequest) -> HttpResponse:
     """
-    Remove item from watchlist
+    Add to or remove from watchlist
     """
+    # Enforce "POST"
+    if request.method != "POST":
+        return _400(request)
+    action = request.POST.get("action", None)
+    id_ = request.POST.get("id_", None)
+    # Check parameter existence
+    if None in (action, id_):
+        return _400(request)
+    try:
+        id_ = int(id_)
+        lt = Listing.objects.get(id=id_)
+    except (ValueError, Listing.DoesNotExist) as err:
+        return _404(request, err)
+    user = request.user
+    # Check user is logged in
+    if not user.is_authenticated:
+        return _403(request)
+    # Add to watchlist
+    if action == "add":
+        # Do not duplicate
+        if not Watch.objects.filter(user=user, listing=lt).exists():
+            watch = Watch(user=request.user, listing=lt)
+            watch.save()
+        return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
+    # Remove from watchlist
+    elif action == "remove":
+        Watch.objects.filter(user=user, listing=lt).delete()
+        return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
+    else:
+        return _400(request)
 
 
-def watch_add(request: HttpRequest) -> HttpResponse:
-    """
-    Add item to watchlist
-    """
+def _400(request: HttpRequest, exception=None) -> HttpResponse:
+    return bad_request(request, exception)
+    # return HttpResponseRedirect(reverse("index"))
+
+
+def _403(request: HttpRequest, exception=None) -> HttpResponse:
+    return permission_denied(request, exception)
+    # return HttpResponseRedirect(reverse("index"))
 
 
 def _404(request: HttpRequest, exception=None) -> HttpResponse:
-    return HttpResponseRedirect(reverse("index"))
+    return page_not_found(request, exception)
+    # return HttpResponseRedirect(reverse("index"))

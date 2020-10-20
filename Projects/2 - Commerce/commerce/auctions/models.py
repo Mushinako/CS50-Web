@@ -3,7 +3,6 @@ from typing import Iterable, Optional
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils import timezone
 
 
 class Category(models.Model):
@@ -18,8 +17,8 @@ class Listing(models.Model):
     description = models.CharField(max_length=1024, blank=True)
     starting_bid = models.PositiveIntegerField()
     image_url = models.URLField(blank=True)
-    category = models.ForeignKey(
-        Category, on_delete=models.PROTECT, related_name="listings", blank=True)
+    category = models.ManyToManyField(
+        Category, related_name="listings", blank=True)
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self) -> str:

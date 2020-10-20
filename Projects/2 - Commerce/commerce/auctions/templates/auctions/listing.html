@@ -13,15 +13,17 @@
     {% if lt %}
         <div>
             <h2>Listing: {{ lt.title }}</h2>
-            {% if watching %}
-                <form action="{% url 'watch_remove' %}" method="POST" class="watching">
+            {% if user.is_authenticated %}
+                <form action="{% url 'watch' %}" method="POST" class="watching">
+                    {% csrf_token %}
                     <input type="hidden" name="id_" value="{{ lt.id }}">
-                    <input type="submit" value="Remove from watchlist">
-                </form>
-            {% else %}
-                <form action="{% url 'watch_add' %}" method="POST" class="watching">
-                    <input type="hidden" name="id_" value="{{ lt.id }}">
-                    <input type="submit" value="Add to watchlist">
+                    {% if watching %}
+                        <input type="hidden" name="action" value="remove">
+                        <input type="submit" value="Remove from watchlist">
+                    {% else %}
+                        <input type="hidden" name="action" value="add">
+                        <input type="submit" value="Add to watchlist">
+                    {% endif %}
                 </form>
             {% endif %}
             {% if lt.image_url %}
