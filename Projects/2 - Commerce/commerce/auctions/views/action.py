@@ -18,6 +18,7 @@ def new_listing(request: HttpRequest) -> HttpResponse:
 
 def comment(request: HttpRequest) -> HttpResponse:
     """
+    Comment on a listing
     """
 
 
@@ -48,11 +49,11 @@ def watch(request: HttpRequest) -> HttpResponse:
         if not Watch.objects.filter(user=user, listing=lt).exists():
             watch = Watch(user=request.user, listing=lt)
             watch.save()
-        return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_str}))
+        return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
     # Remove from watchlist
     elif action == "remove":
         Watch.objects.filter(user=user, listing=lt).delete()
-        return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_str}))
+        return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
     else:
         return _400(request)
 
@@ -90,11 +91,11 @@ def bid(request: HttpRequest) -> HttpResponse:
     # Check if the bid is larger than current
     if bid <= max_bid_amount:
         return HttpResponseRedirect(reverse("listing",
-                                            kwargs={"id_": id_str, "bid_err": True}))
+                                            kwargs={"id_": id_, "bid_err": True}))
     # Add new bid
     new_bid = Bid(user=user, listing=lt, amount=bid)
     new_bid.save()
-    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_str}))
+    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
 
 
 def close(request: HttpRequest) -> HttpResponse:
@@ -119,7 +120,7 @@ def close(request: HttpRequest) -> HttpResponse:
     # Mark nonactive
     lt.active = False
     lt.save()
-    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_str}))
+    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
 
 
 # TODO: Create listing; Comment

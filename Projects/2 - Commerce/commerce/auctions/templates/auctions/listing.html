@@ -1,6 +1,5 @@
 {% extends "auctions/layout.html" %}
 {% load static %}
-{% load check_user %}
 
 {% block title %}
     {{ lt.title }}
@@ -14,70 +13,30 @@
     {% if lt %}
         <div>
             <h2>Listing: {{ lt.title }}</h2>
-            {% if user.is_authenticated %}
-                <form action="{% url 'watch' %}" method="POST" class="listing-form-watch">
-                    {% csrf_token %}
-                    <input type="hidden" name="id_" value="{{ lt.id }}">
-                    {% if watching %}
-                        <input type="hidden" name="action" value="remove">
-                        <input type="submit" value="Remove from watchlist">
-                    {% else %}
-                        <input type="hidden" name="action" value="add">
-                        <input type="submit" value="Add to watchlist">
-                    {% endif %}
-                </form>
-            {% endif %}
-            {% if lt.image_url %}
-                <img src="{{ lt.image_url }}" alt="{{ lt.title }}">
-            {% endif %}
-            {% if lt.description %}
-                <div class="listing-description">{{ lt.description }}</div>
-            {% endif %}
-            <div class="listing-categories">
-                <span class="prefix">Categories:</span>
-                {% for cat in lt.categories.all %}
-                    <span class="content"><a href="{% url 'category' cat %}">{{ cat }}</a></span>
-                {% endfor %}
-            </div>
-            <div class="listing-creation">
-                <span class="prefix">Created </span>
-                <span class="content">{{ lt.get_time_str }}</span>
-                <span class="prefix"> by </span>
-                <span class="content">{{ lt.created_by }}</span>
-            </div>
-            <div class="listing-price">{{ currency }}{{ max_bid }}</div>
-            <div class="listing-bids">
-                <span class="num">{{ num_bids }} so far.</span>
-                {% if is_max_bid %}
-                    <span class="is-current"> Your bid is the current bid.</span>
-                {% endif %}
-            </div>
+            {% include "auctions/snippets/lt/watch.html" %}
+            {% include "auctions/snippets/lt/image.html" %}
+            {% include "auctions/snippets/lt/description.html" %}
+            {% include "auctions/snippets/lt/categories.html" %}
+            {% include "auctions/snippets/lt/creation.html" %}
+            {% include "auctions/snippets/lt/price.html" with currency=lb.currency max_bid=lb.max_bid %}
+            {% include "auctions/snippets/lt/bid/current.html" %}
             {% if lt.active %}
-                {% if request.user|is_owner:lt.created_by %}
-                    <form action="{% url 'close' %}" method="POST" class="listing-form-close">
-                        {% csrf_token %}
-                        <input type="hidden" name="id_" value="{{ lt.id }}">
-                        <input type="submit" value="Sold!" {% if no_bids %}disabled{% endif %}>
-                    </form>
+                {% if is_owner %}
+                    {% include "auctions/snippets/lt/bid/close.html" %}
                 {% elif user.is_authenticated %}
-                    {% if bid_err %}
-                        <div class="listing-bid-err">You've submitted an invalid bid!</div>
-                    {% endif %}
-                    <form action="{% url 'bid' %}" method="POST" class="listing-form-bid">
-                        {% csrf_token %}
-                        <input type="hidden" name="id_" value="{{ lt.id }}">
-                        {{ currency }}<input type="number" name="bid" value="{{ min_starting_bid }}" step="0.01" min="{{ min_starting_bid }}">
-                        <input type="submit" value="Bid">
-                    </form>
+                    {% include "auctions/snippets/lt/bid/bid.html" %}
                 {% else %}
-                    <form class="listing-form-bid">
-                        {{ currency }}<input type="text" value="Log in to start bidding!" disabled>
-                        <input type="submit" value="Bid" disabled>
-                    </form>
+                    {% include "auctions/snippets/lt/bid/bid-disabled.html" %}
                 {% endif %}
             {% else %}
-                <div class="listing-sold">This item is sold.</div>
+                <div class="lt-sold">This item is sold.</div>
             {% endif %}
+            {% if user.is_authenticated %}
+                {% include "auctions/snippets/lt/comment/comment.html" %}
+            {% else %}
+                {% include "auctions/snippets/lt/comment/comment-disabled.html" %}
+            {% endif %}
+            {% include "auctions/snippets/lt/comment/entries.html" %}
         </div>
     {% else %}
         <h2>Requested listing does not exist!</h2>

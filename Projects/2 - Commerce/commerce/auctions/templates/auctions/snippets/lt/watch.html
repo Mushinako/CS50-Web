@@ -1,0 +1,11 @@
+{% if user.is_authenticated %}
+    <form action="{% url 'watch' %}" method="POST" class="lt-form-watch">
+        {% csrf_token %}
+        {{ lf.watch_form }}
+        {% if watching %}
+            <input type="submit" value="Remove from watchlist">
+        {% else %}
+            <input type="submit" value="Add to watchlist">
+        {% endif %}
+    </form>
+{% endif %}

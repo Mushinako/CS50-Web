@@ -4,9 +4,9 @@ from . import views
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("listing/<str:id_>", views.listing, name="listing"),
-    re_path(r"^category(?:/(?P<category>.+))?$",
-            views.category, name="category"),
+    path("listing/<int:id_>", views.listing, name="listing"),
+    path("category", views.categories, name="categories"),
+    path("category/<str:category>", views.category, name="category"),
     path("login", views.login_view, name="login"),
     path("logout", views.logout_view, name="logout"),
     path("register", views.register, name="register"),

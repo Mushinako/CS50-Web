@@ -1,0 +1,7 @@
+<div class="lt-categories">
+    {% for cat in lt.categories.all %}
+        <span class="content">
+            <a href="{% url 'category' cat %}">{{ cat }}</a>
+        </span>
+    {% endfor %}
+</div>
