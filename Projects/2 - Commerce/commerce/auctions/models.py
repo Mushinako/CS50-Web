@@ -57,7 +57,8 @@ class Comment(models.Model):
         User, on_delete=models.CASCADE, related_name="comments")
     listing = models.ForeignKey(
         Listing, on_delete=models.CASCADE, related_name="comments")
-    message = models.CharField(max_length=1024)
+    title = models.CharField(max_length=64)
+    content = models.CharField(max_length=1024, blank=True)
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self) -> str:

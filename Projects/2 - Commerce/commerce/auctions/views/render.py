@@ -2,8 +2,9 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from .error import _404
-from .util import CURRENCY_SYMBOL, gen_listing_bid, gen_listing_forms
-from ..models import Category, Listing, User
+from .util import gen_listing_bid, gen_listing_forms
+from .var import CURRENCY_SYMBOL
+from ..models import Category, Comment, Listing, User
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -29,7 +30,8 @@ def listing(request: HttpRequest, id_: int, bid_err: bool = False) -> HttpRespon
     watches: User.objects = lt.watched_by
     watching = watches.filter(id=request.user.id).exists()
     # Comments
-    comments = lt.comments
+    comments_manager: Comment.objects = lt.comments
+    comments = comments_manager.all()
     # Forms
     lf = gen_listing_forms(lt, lb, watching)
     return render(request, "auctions/listing.html", {
@@ -58,11 +60,11 @@ def category(request: HttpRequest, category: str) -> HttpResponse:
     View listings by category
     """
     category_obj = Category.objects.filter(
-        name=category, active=True).first()
+        name=category).first()
     if category_obj is None:
         return _404(request)
     listings: Listing.objects = category_obj.listings
-    listing_elements = listings.all()
+    listing_elements = listings.filter(active=True)
     return render(request, "auctions/category.html", {
         "cat_name": category,
         "listings": listing_elements,

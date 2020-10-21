@@ -1,5 +1,5 @@
 from math import ceil
-from typing import Optional
+from typing import Dict, Optional
 
 from django.db.models import Max
 from django.http import HttpResponseRedirect
@@ -8,6 +8,7 @@ from django.http.response import HttpResponse
 from django.urls import reverse
 
 from .error import _400, _403
+from .form import BidForm, CloseForm, CommentForm, WatchForm
 from ..models import Bid, Listing, Watch
 
 
@@ -29,33 +30,60 @@ def watch(request: HttpRequest) -> HttpResponse:
     # Enforce "POST"
     if request.method != "POST":
         return _400(request)
+    f = WatchForm(request.POST)
+    if not f.is_valid():
+        return _400(request)
     user = request.user
     # Check user is logged in
     if not user.is_authenticated:
         return _403(request)
-    id_str = request.POST.get("id_", None)
-    action = request.POST.get("action", None)
-    # Check parameter existence
-    if None in (id_str, action):
-        return _400(request)
+    data = f.cleaned_data
+    id_ = data["_id"]
+    action = data["_action"]
+    # Check corresponding listing existence
     try:
-        id_ = int(id_str)
         lt = Listing.objects.get(id=id_)
-    except (ValueError, Listing.DoesNotExist) as err:
+    except Listing.DoesNotExist as err:
         return _400(request, err)
     # Add to watchlist
-    if action == "add":
+    if action == WatchForm.ADD:
         # Do not duplicate
         if not Watch.objects.filter(user=user, listing=lt).exists():
             watch = Watch(user=request.user, listing=lt)
             watch.save()
         return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
     # Remove from watchlist
-    elif action == "remove":
+    elif action == WatchForm.REMOVE:
         Watch.objects.filter(user=user, listing=lt).delete()
         return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
     else:
         return _400(request)
+
+
+def close(request: HttpRequest) -> HttpResponse:
+    """
+    Close a listing
+    """
+    # Enforce "POST"
+    if request.method != "POST":
+        return _400(request)
+    f = CloseForm(request.POST)
+    if not f.is_valid():
+        return _400(request)
+    data = f.cleaned_data
+    id_ = data["_id"]
+    # Check corresponding listing existence
+    try:
+        lt = Listing.objects.get(id=id_)
+    except (ValueError, Listing.DoesNotExist) as err:
+        return _400(request, err)
+    # Check user is the creator
+    if request.user != lt.created_by:
+        return _403(request)
+    # Mark nonactive
+    lt.active = False
+    lt.save()
+    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
 
 
 def bid(request: HttpRequest) -> HttpResponse:
@@ -96,31 +124,3 @@ def bid(request: HttpRequest) -> HttpResponse:
     new_bid = Bid(user=user, listing=lt, amount=bid)
     new_bid.save()
     return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
-
-
-def close(request: HttpRequest) -> HttpResponse:
-    """
-    Close a listing
-    """
-    # Enforce "POST"
-    if request.method != "POST":
-        return _400(request)
-    id_str = request.POST.get("id_", None)
-    # Check parameter existence
-    if id_str == None:
-        return _400(request)
-    try:
-        id_ = int(id_str)
-        lt = Listing.objects.get(id=id_)
-    except (ValueError, Listing.DoesNotExist) as err:
-        return _400(request, err)
-    # Check user is the creator
-    if request.user != lt.created_by:
-        return _403(request)
-    # Mark nonactive
-    lt.active = False
-    lt.save()
-    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
-
-
-# TODO: Create listing; Comment

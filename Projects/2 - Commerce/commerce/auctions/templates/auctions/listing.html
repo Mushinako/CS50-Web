@@ -6,7 +6,8 @@
 {% endblock title %}
 
 {% block head %}
-    <link href="{% static 'auctions/listing.css' %}" rel="stylesheet">
+    <link href="{% static 'auctions/css/listing.css' %}" rel="stylesheet">
+    <script src="{% static '' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -31,6 +32,7 @@
             {% else %}
                 <div class="lt-sold">This item is sold.</div>
             {% endif %}
+            <h3>Comments</h3>
             {% if user.is_authenticated %}
                 {% include "auctions/snippets/lt/comment/comment.html" %}
             {% else %}

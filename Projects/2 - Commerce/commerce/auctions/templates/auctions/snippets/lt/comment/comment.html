@@ -1,6 +1,9 @@
 <form action="{% url 'comment' %}" method="POST" class="lt-form-comment">
     {% csrf_token %}
-    {% comment %} <input type="hidden" name="id_" value="{{ lt.id }}"> {% endcomment %}
-    {% comment %} <input type="number" name="bid" value="{{ min_starting_bid }}" step="0.01" min="{{ min_starting_bid }}"> {% endcomment %}
-    {% comment %} <input type="submit" value="Bid"> {% endcomment %}
+    <table class="lt-form-comment-table">
+        <tbody>
+            {{ lf.comment_form.as_table }}
+        </tbody>
+    </table>
+    <input type="submit" value="Comment">
 </form>
