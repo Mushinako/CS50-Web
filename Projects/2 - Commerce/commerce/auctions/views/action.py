@@ -9,17 +9,47 @@ from django.urls import reverse
 
 from .error import _400, _403
 from .form import BidForm, CloseForm, CommentForm, WatchForm
-from ..models import Bid, Listing, Watch
+from ..models import Bid, Comment, Listing, Watch
 
 
 def new_listing(request: HttpRequest) -> HttpResponse:
     """
+    Add a new listing
     """
 
 
-def comment(request: HttpRequest) -> HttpResponse:
+def add_comment(request: HttpRequest) -> HttpResponse:
     """
     Comment on a listing
+    """
+    # Enforce "POST"
+    if request.method != "POST":
+        return _400(request)
+    f = CommentForm(request.POST)
+    # Check form validity
+    if not f.is_valid():
+        return _400(request)
+    user = request.user
+    # Check user is logged in
+    if not user.is_authenticated:
+        return _403(request)
+    data = f.cleaned_data
+    id_: int = data["_id"]
+    title: str = data["title"]
+    content: str = data["content"]
+    # Check corresponding listing existence
+    try:
+        lt = Listing.objects.get(id=id_)
+    except Listing.DoesNotExist as err:
+        return _400(request, err)
+    # Add new comment
+    comment = Comment(user=user, listing=lt, title=title, content=content)
+    comment.save()
+    return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
+
+
+def edit_comment(request: HttpRequest) -> HttpResponse:
+    """
     """
 
 
@@ -39,8 +69,8 @@ def watch(request: HttpRequest) -> HttpResponse:
     if not user.is_authenticated:
         return _403(request)
     data = f.cleaned_data
-    id_ = data["_id"]
-    action = data["_action"]
+    id_: int = data["_id"]
+    action: str = data["_action"]
     # Check corresponding listing existence
     try:
         lt = Listing.objects.get(id=id_)
@@ -73,7 +103,7 @@ def close(request: HttpRequest) -> HttpResponse:
     if not f.is_valid():
         return _400(request)
     data = f.cleaned_data
-    id_ = data["_id"]
+    id_: int = data["_id"]
     # Check corresponding listing existence
     try:
         lt = Listing.objects.get(id=id_)
@@ -104,9 +134,10 @@ def bid(request: HttpRequest) -> HttpResponse:
     if not user.is_authenticated:
         return _403(request)
     data = f.cleaned_data
-    id_ = data["id_"]
-    bid_float = data["bid"]
+    id_: int = data["_id"]
+    bid_float: float = data["bid"]
     bid = ceil(bid_float * 100)
+    # Check corresponding listing existence
     try:
         lt = Listing.objects.get(id=id_)
     except Listing.DoesNotExist as err:

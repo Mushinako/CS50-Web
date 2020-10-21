@@ -14,7 +14,7 @@ class ListingBid():
     no_bids: bool
     num_bids: str
     is_max_bid: bool
-    max_bid: float
+    max_bid: str
     min_starting_bid: float
     currency: str
 
@@ -44,7 +44,7 @@ def gen_listing_bid(request: HttpRequest, lt: Listing) -> ListingBid:
     else:
         max_bid = bids.order_by("-amount").first()
         is_max_bid = max_bid.user == request.user
-        max_bid_amount_int = max_bid.amount
+        max_bid_amount_int: int = max_bid.amount
     max_bid_amount = f"{max_bid_amount_int/100:,.2f}"
     min_starting_bid = (max_bid_amount_int+1)/100
     lb = ListingBid(no_bids, num_bids_str, is_max_bid,
@@ -62,6 +62,6 @@ def gen_listing_forms(lt: Listing, lb: ListingBid, watching: bool) -> ListingFor
         "_id": lt.id,
         "bid": ceil(lb.min_starting_bid)
     }, bid_min_value=lb.min_starting_bid)
-    comment_form = CommentForm()
+    comment_form = CommentForm(initial={"_id": lt.id})
     lf = ListingForms(close_form, watch_form, bid_form, comment_form)
     return lf

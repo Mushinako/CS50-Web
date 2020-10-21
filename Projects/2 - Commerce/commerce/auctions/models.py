@@ -62,7 +62,7 @@ class Comment(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.user} commented {self.message}"
+        return f"{self.user} commented {self.title}"
 
     def get_time_str(self) -> str:
         time: datetime = self.creation_time

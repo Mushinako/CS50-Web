@@ -1,5 +1,6 @@
 from typing import Optional
 from django.http import HttpRequest, HttpResponse
+from django.http import request
 from django.shortcuts import render
 
 from .error import _404
@@ -70,3 +71,13 @@ def category(request: HttpRequest, category: str) -> HttpResponse:
         "cat_name": category,
         "listings": listing_elements,
     })
+
+
+def comment_new(request: HttpRequest, lt_id: int) -> HttpResponse:
+    """
+    """
+
+
+def comment_edit(request: HttpRequest, com_id: int) -> HttpResponse:
+    """
+    """

@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block title %}
+    {{ lt.title }}
+{% endblock title %}
+
+{% block head %}
+    <link href="{% static 'auctions/css/base-lt.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block body %}
+    {% if lt %}
+        <div>
+            <h2>Listing: {{ lt.title }}</h2>
+            {% include "auctions/snippets/lt/watch.html" %}
+            {% include "auctions/snippets/lt/image.html" %}
+            {% include "auctions/snippets/lt/description.html" %}
+            {% include "auctions/snippets/lt/categories.html" %}
+            {% block actions %}
+            {% endblock actions %}
+        </div>
+    {% else %}
+        <h2>Requested listing does not exist!</h2>
+    {% endif %}
+{% endblock body %}

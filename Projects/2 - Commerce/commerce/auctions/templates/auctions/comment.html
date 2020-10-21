@@ -1,0 +1,20 @@
+{% extends "auctions/base-lt.html" %}
+{% load static %}
+
+{% block title %}
+    Commenting on {{ lt.title }}
+{% endblock title %}
+
+{% block head %}
+    <link href="{% static 'auctions/css/comment.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block actions %}
+    {% if com_err %}
+        <div class="lt-comment-err">{{ com_err }}</div>
+    {% elif user.is_authenticated %}
+        {% include "auctions/snippets/lt/comment-block/comment.html" %}
+    {% else %}
+        {% include "auctions/snippets/lt/comment-block/comment-disabled.html" %}
+    {% endif %}
+{% endblock actions %}
