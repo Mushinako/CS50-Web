@@ -1,6 +1,3 @@
-{% if bid_err %}
-    <div class="lt-bid-err">You've submitted an invalid bid!</div>
-{% endif %}
 <form action="{% url 'bid' %}" method="POST" class="lt-form-bid">
     {% csrf_token %}
     {{ lf.bid_form }}

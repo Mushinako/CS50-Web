@@ -1,3 +1,4 @@
+from typing import Optional
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
@@ -15,7 +16,7 @@ def index(request: HttpRequest) -> HttpResponse:
     })
 
 
-def listing(request: HttpRequest, id_: int, bid_err: bool = False) -> HttpResponse:
+def listing(request: HttpRequest, id_: int, bid_err: Optional[str] = None) -> HttpResponse:
     """
     Listing details page
     """

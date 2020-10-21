@@ -31,6 +31,7 @@ def watch(request: HttpRequest) -> HttpResponse:
     if request.method != "POST":
         return _400(request)
     f = WatchForm(request.POST)
+    # Check form validity
     if not f.is_valid():
         return _400(request)
     user = request.user
@@ -68,6 +69,7 @@ def close(request: HttpRequest) -> HttpResponse:
     if request.method != "POST":
         return _400(request)
     f = CloseForm(request.POST)
+    # Check form validity
     if not f.is_valid():
         return _400(request)
     data = f.cleaned_data
@@ -75,7 +77,7 @@ def close(request: HttpRequest) -> HttpResponse:
     # Check corresponding listing existence
     try:
         lt = Listing.objects.get(id=id_)
-    except (ValueError, Listing.DoesNotExist) as err:
+    except Listing.DoesNotExist as err:
         return _400(request, err)
     # Check user is the creator
     if request.user != lt.created_by:
@@ -93,20 +95,21 @@ def bid(request: HttpRequest) -> HttpResponse:
     # Enforce "POST"
     if request.method != "POST":
         return _400(request)
+    f = BidForm(request.POST)
+    # Check form validity
+    if not f.is_valid():
+        return _400(request)
     user = request.user
     # Check user is logged in
     if not user.is_authenticated:
         return _403(request)
-    id_str = request.POST.get("id_", None)
-    bid_str = request.POST.get("bid", None)
-    # Check parameter existence
-    if None in (id_str, bid_str):
-        return _400(request)
+    data = f.cleaned_data
+    id_ = data["id_"]
+    bid_float = data["bid"]
+    bid = ceil(bid_float * 100)
     try:
-        bid = ceil(float(bid_str)*100)
-        id_ = int(id_str)
         lt = Listing.objects.get(id=id_)
-    except (ValueError, Listing.DoesNotExist) as err:
+    except Listing.DoesNotExist as err:
         return _400(request, err)
     # Check user is not the creator
     if user == lt.created_by:
@@ -118,8 +121,10 @@ def bid(request: HttpRequest) -> HttpResponse:
         max_bid_amount: int = lt.starting_bid
     # Check if the bid is larger than current
     if bid <= max_bid_amount:
-        return HttpResponseRedirect(reverse("listing",
-                                            kwargs={"id_": id_, "bid_err": True}))
+        return HttpResponseRedirect(reverse("listing", kwargs={
+            "id_": id_,
+            "bid_err": "You've submitted an invalid bid!",
+        }))
     # Add new bid
     new_bid = Bid(user=user, listing=lt, amount=bid)
     new_bid.save()
