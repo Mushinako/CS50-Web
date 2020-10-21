@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Iterable, Optional
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -12,14 +11,23 @@ class Category(models.Model):
         return f"{self.name}"
 
 
+class User(AbstractUser):
+    def __str__(self) -> str:
+        return f"{self.username}"
+
+
 class Listing(models.Model):
+    active = models.BooleanField(default=True)
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=1024, blank=True)
     starting_bid = models.PositiveIntegerField()
     image_url = models.URLField(blank=True)
-    category = models.ManyToManyField(
+    categories = models.ManyToManyField(
         Category, related_name="listings", blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
+    watched_by = models.ManyToManyField(
+        User, related_name="watchlist", blank=True, through="Watch")
 
     def __str__(self) -> str:
         return f"{self.title}"
@@ -36,22 +44,19 @@ class Listing(models.Model):
         return time.strftime("%c")
 
 
-class User(AbstractUser):
-    watchlist = models.ManyToManyField(
-        Listing, related_name="watched_by", blank=True, through="Watch")
-
-    def __str__(self) -> str:
-        return f"{self.username}"
-
-
 class Watch(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f"{self.user} is watching {self.listing}"
 
 
 class Comment(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comments")
+    listing = models.ForeignKey(
+        Listing, on_delete=models.CASCADE, related_name="comments")
     message = models.CharField(max_length=1024)
     creation_time = models.DateTimeField(auto_now_add=True, blank=True)
 

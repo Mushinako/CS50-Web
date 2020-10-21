@@ -1,3 +1,4 @@
+from typing import Optional
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
@@ -7,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.defaults import bad_request, page_not_found, permission_denied
 
-from .models import User, Listing, Watch
+from .models import Category, User, Listing, Watch, Bid
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -80,9 +81,31 @@ def listing(request: HttpRequest, id_: str) -> HttpResponse:
         return _404(request, err)
     watches: User.objects = lt.watched_by
     watching = watches.filter(id=request.user.id).exists()
+    is_owner = lt.created_by == request.user
+    bids: Bid.objects = lt.bids
+    all_bids = bids.all()
+    num_bids = all_bids.count()
+    no_bids = num_bids == 0
+    num_bids_str = f"{num_bids} bid{'' if num_bids == 1 else 's'}"
+    if all_bids:
+        max_bid = max(all_bids, key=lambda b: b.amount)
+        is_max_bid = max_bid.user == request.user
+        max_bid_amount = max_bid.amount
+    else:
+        is_max_bid = False
+        max_bid_amount = lt.starting_bid
+    max_bid_amount_str = f"{max_bid_amount/100:,.2f}"
+    min_starting_bid_str = f"{(max_bid_amount+1)/100:,.2f}"
     return render(request, "auctions/listing.html", {
         "lt": lt,
         "watching": watching,
+        "is_owner": is_owner,
+        "no_bids": no_bids,
+        "num_bids": num_bids_str,
+        "is_max_bid": is_max_bid,
+        "max_bid": max_bid_amount_str,
+        "min_starting_bid": min_starting_bid_str,
+        "currency": "$",
     })
 
 
@@ -120,6 +143,41 @@ def watch(request: HttpRequest) -> HttpResponse:
         return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
     else:
         return _400(request)
+
+
+def category(request: HttpRequest, category: Optional[str] = None) -> HttpResponse:
+    """
+    View listings by category
+    """
+    # All category page
+    if category is None:
+        categories = Category.objects.all()
+        return render(request, "auctions/categories.html", {
+            "categories": categories,
+        })
+    # Specific category
+    else:
+        category_obj = Category.objects.filter(name=category).first()
+        if category_obj is None:
+            return _404(request)
+        listings: Listing.objects = category_obj.listings
+        listing_elements = listings.all()
+        return render(request, "auctions/category.html", {
+            "cat_name": category,
+            "listings": listing_elements,
+        })
+
+
+def bid(request: HttpRequest) -> HttpResponse:
+    """
+    Bid a listing
+    """
+
+
+def close(request: HttpRequest) -> HttpResponse:
+    """
+    Close a listing
+    """
 
 
 def _400(request: HttpRequest, exception=None) -> HttpResponse:

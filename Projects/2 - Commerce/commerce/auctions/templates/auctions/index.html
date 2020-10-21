@@ -3,10 +3,10 @@
 
 {% block head %}
     <link href="{% static 'auctions/index.css' %}" rel="stylesheet">
-{% endblock%}
+{% endblock head %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>{% block pageheading %}Active Listings{% endblock pageheading %}</h2>
 
     <div>
         {% for lt in listings %}
@@ -35,4 +35,4 @@
             <span class="no-listings">No listings yet</span>
         {% endfor %}
     </div>
-{% endblock %}
+{% endblock body %}
