@@ -52,24 +52,31 @@
                     <span class="is-current"> Your bid is the current bid.</span>
                 {% endif %}
             </div>
-            {% if request.user|is_owner:lt.created_by %}
-                <form action="{% url 'close' %}" method="POST" class="listing-form-close">
-                    {% csrf_token %}
-                    <input type="hidden" name="id_" value="{{ lt.id }}">
-                    <input type="submit" value="Sold!" {% if no_bids %}disabled{% endif %}>
-                </form>
-            {% elif user.is_authenticated %}
-                <form action="{% url 'bid' %}" method="POST" class="listing-form-bid">
-                    {% csrf_token %}
-                    <input type="hidden" name="id_" value="{{ lt.id }}">
-                    {{ currency }}<input type="number" name="bid" value="{{ min_starting_bid }}" step="0.01" min="{{ min_starting_bid }}">
-                    <input type="submit" value="Bid">
-                </form>
+            {% if lt.active %}
+                {% if request.user|is_owner:lt.created_by %}
+                    <form action="{% url 'close' %}" method="POST" class="listing-form-close">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_" value="{{ lt.id }}">
+                        <input type="submit" value="Sold!" {% if no_bids %}disabled{% endif %}>
+                    </form>
+                {% elif user.is_authenticated %}
+                    {% if bid_err %}
+                        <div class="listing-bid-err">You've submitted an invalid bid!</div>
+                    {% endif %}
+                    <form action="{% url 'bid' %}" method="POST" class="listing-form-bid">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_" value="{{ lt.id }}">
+                        {{ currency }}<input type="number" name="bid" value="{{ min_starting_bid }}" step="0.01" min="{{ min_starting_bid }}">
+                        <input type="submit" value="Bid">
+                    </form>
+                {% else %}
+                    <form class="listing-form-bid">
+                        {{ currency }}<input type="text" value="Log in to start bidding!" disabled>
+                        <input type="submit" value="Bid" disabled>
+                    </form>
+                {% endif %}
             {% else %}
-                <form class="listing-form-bid">
-                    {{ currency }}<input type="text" value="Log in to start bidding!" disabled>
-                    <input type="submit" value="Bid" disabled>
-                </form>
+                <div class="listing-sold">This item is sold.</div>
             {% endif %}
         </div>
     {% else %}
