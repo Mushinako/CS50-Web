@@ -1,12 +1,14 @@
 from math import ceil
 from dataclasses import dataclass
+from typing import Optional
+from django.db.models.query import QuerySet
 
 from django.http import HttpRequest
 
 from .form import (BidForm, BidDisabledForm, CloseForm,
                    CommentForm, CommentDisabledForm, WatchForm)
 from .var import CURRENCY_SYMBOL
-from ..models import Bid, Listing
+from ..models import Bid, Comment, Listing
 
 
 @dataclass
@@ -25,6 +27,17 @@ class ListingForms():
     watch_form: WatchForm
     bid_form: BidForm
     bid_disabled_form = BidDisabledForm()
+
+
+@dataclass
+class ListingComments():
+    user_comment: Optional[Comment]
+    other_comments: QuerySet
+    num_of_comments: int
+
+
+@dataclass
+class CommentForms():
     comment_form: CommentForm
     comment_disabled_form = CommentDisabledForm()
 
@@ -60,8 +73,36 @@ def gen_listing_forms(lt: Listing, lb: ListingBid, watching: bool) -> ListingFor
     })
     bid_form = BidForm(initial={
         "_id": lt.id,
-        "bid": ceil(lb.min_starting_bid)
+        "bid": ceil(lb.min_starting_bid*1.1)
     }, bid_min_value=lb.min_starting_bid)
-    comment_form = CommentForm(initial={"_id": lt.id})
-    lf = ListingForms(close_form, watch_form, bid_form, comment_form)
+    lf = ListingForms(close_form, watch_form, bid_form)
     return lf
+
+
+def gen_new_comment_forms(lt: Listing) -> CommentForms:
+    comment_form = CommentForm(initial={"_id": lt.id})
+    cf = CommentForms(comment_form)
+    return cf
+
+
+def gen_edit_comment_forms(com: Comment) -> CommentForms:
+    comment_form = CommentForm(initial={
+        "_id": com.id,
+        "title": com.title,
+        "content": com.content,
+    })
+    cf = CommentForms(comment_form)
+    return cf
+
+
+def gen_listing_comments(request: HttpRequest, lt: Listing) -> ListingComments:
+    comments_manager: Comment.objects = lt.comments
+    user = request.user
+    try:
+        user_comment = comments_manager.get(user=user)
+    except Listing.DoesNotExist:
+        user_comment = None
+    other_comments = comments_manager.exclude(user=user)
+    num_of_comments = bool(user_comment) + len(other_comments)
+    lc = ListingComments(user_comment, other_comments, num_of_comments)
+    return lc

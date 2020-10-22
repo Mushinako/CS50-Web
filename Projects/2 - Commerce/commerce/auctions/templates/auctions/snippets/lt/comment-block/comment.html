@@ -1,9 +1,9 @@
-<form action="{% url 'comment' %}" method="POST" class="lt-form-comment">
+<form action="{% url post_url %}" method="POST" class="lt-form-comment">
     {% csrf_token %}
     <table class="lt-form-comment-table">
         <tbody>
-            {{ lf.comment_form.as_table }}
+            {{ cf.comment_form.as_table }}
         </tbody>
     </table>
-    <input type="submit" value="Comment">
+    <input type="submit" value="Save">
 </form>

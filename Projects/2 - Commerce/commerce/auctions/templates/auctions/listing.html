@@ -26,7 +26,7 @@
         <div class="lt-sold">This item is sold.</div>
     {% endif %}
     <h3>Comments</h3>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not lc.user_comment %}
         <div class="lt-comment-link">
             <a href="{% url 'comment-new' lt.id %}">Add a comment</a>
         </div>

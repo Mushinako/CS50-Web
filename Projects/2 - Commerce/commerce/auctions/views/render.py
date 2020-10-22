@@ -3,8 +3,8 @@ from django.http import HttpRequest, HttpResponse
 from django.http import request
 from django.shortcuts import render
 
-from .error import _404
-from .util import gen_listing_bid, gen_listing_forms
+from .error import _403, _404
+from .util import gen_edit_comment_forms, gen_listing_bid, gen_listing_comments, gen_listing_forms, gen_new_comment_forms
 from .var import CURRENCY_SYMBOL
 from ..models import Category, Comment, Listing, User
 
@@ -31,19 +31,18 @@ def listing(request: HttpRequest, id_: int, bid_err: Optional[str] = None) -> Ht
     # Watchlist
     watches: User.objects = lt.watched_by
     watching = watches.filter(id=request.user.id).exists()
-    # Comments
-    comments_manager: Comment.objects = lt.comments
-    comments = comments_manager.all()
     # Forms
     lf = gen_listing_forms(lt, lb, watching)
+    # Comments
+    lc = gen_listing_comments(request, lt)
     return render(request, "auctions/listing.html", {
         "lt": lt,
         "lb": lb,
         "lf": lf,
+        "lc": lc,
         "bid_err": bid_err,
         "is_owner": is_owner,
         "watching": watching,
-        "comments": comments,
     })
 
 
@@ -75,9 +74,43 @@ def category(request: HttpRequest, category: str) -> HttpResponse:
 
 def comment_new(request: HttpRequest, lt_id: int) -> HttpResponse:
     """
+    Page for adding a new comment
     """
+    try:
+        lt = Listing.objects.get(id=lt_id)
+    except Listing.DoesNotExist as err:
+        return _404(request, err)
+    comments_manager: Comment.objects = lt.comments
+    # Check if user has already made a comment
+    try:
+        user_comment = comments_manager.get(user=request.user)
+    except Listing.DoesNotExist:
+        user_comment = None
+    if user_comment is not None:
+        return _403(request)
+    cf = gen_new_comment_forms(lt)
+    return render(request, "auctions/comment.html", {
+        "lt": lt,
+        "cf": cf,
+        "post_url": "new-comment",
+    })
 
 
 def comment_edit(request: HttpRequest, com_id: int) -> HttpResponse:
     """
+    Page for editing a comment
     """
+    try:
+        com = Comment.objects.get(id=com_id)
+    except Listing.DoesNotExist as err:
+        return _404(request, err)
+    # Check if comment is made by the user
+    if com.user != request.user:
+        return _403(request)
+    cf = gen_edit_comment_forms(com)
+    lt: Listing.objects = com.listing
+    return render(request, "auctions/comment.html", {
+        "lt": lt,
+        "cf": cf,
+        "post_url": "edit-comment",
+    })

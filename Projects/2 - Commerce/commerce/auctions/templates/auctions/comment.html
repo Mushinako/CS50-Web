@@ -10,9 +10,7 @@
 {% endblock head %}
 
 {% block actions %}
-    {% if com_err %}
-        <div class="lt-comment-err">{{ com_err }}</div>
-    {% elif user.is_authenticated %}
+    {% if user.is_authenticated %}
         {% include "auctions/snippets/lt/comment-block/comment.html" %}
     {% else %}
         {% include "auctions/snippets/lt/comment-block/comment-disabled.html" %}
