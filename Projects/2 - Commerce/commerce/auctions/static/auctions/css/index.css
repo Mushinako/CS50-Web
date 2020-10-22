@@ -1,21 +1,26 @@
-img {
-    max-width: 100%;
-}
-
-.listing-left {
+.lt-left {
+    display: inline-block;
+    vertical-align: top;
     width: 100%;
 }
 
-.listing-right {
+.lt-right {
+    display: inline-block;
+    vertical-align: top;
     width: 100%;
+}
+
+.lt-title {
+    font-size: large;
+    font-weight: bold;
 }
 
 @media (min-width: 768px) {
-    .listing-left {
-        width: 40%;
+    .lt-left {
+        width: 39%;
     }
 
-    .listing-right {
+    .lt-right {
         width: 60%;
     }
 }

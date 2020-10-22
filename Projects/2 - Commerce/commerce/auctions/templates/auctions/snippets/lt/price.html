@@ -1,1 +1,4 @@
-<div class="lt-price">{{ currency }}{{ max_bid|floatformat:2 }}</div>
+<div class="lt-price">
+    <span class="prefix">Current price: </span>
+    <span class="content">{{ currency }}{{ max_bid|floatformat:2 }}</span>
+</div>

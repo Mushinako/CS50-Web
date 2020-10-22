@@ -1,5 +1,5 @@
 <div class="lt-categories">
-    {% for cat in lt.categories.all %}
+    {% for cat in lt.categories.all|dictsort:'name' %}
         <span class="content">
             <a href="{% url 'category' cat %}">{{ cat }}</a>
         </span>

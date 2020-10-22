@@ -12,11 +12,11 @@
 {% block body %}
     <h2>Categories</h2>
 
-    <ul>
-        {% for cat in categories %}
-            <li><a href="{% url 'category' cat %}">{{ cat }}</a></li>
+    <div class="lt-categories">
+        {% for cat in categories|dictsort:'name' %}
+            <div class="content"><a href="{% url 'category' cat %}">{{ cat }}</a></div>
         {% empty %}
-            <li>No categories yet</li>
+            <div>No categories yet</div>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock body %}

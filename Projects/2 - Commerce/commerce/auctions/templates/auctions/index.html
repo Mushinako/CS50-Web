@@ -10,7 +10,7 @@
 
     <div>
         {% for lt in listings %}
-            <div class="row">
+            <div class="cust-row">
                 <div class="lt-left">
                     {% include "auctions/snippets/lt/image.html" %}
                 </div>
@@ -19,7 +19,6 @@
                     {% include "auctions/snippets/lt/categories.html" %}
                     {% include "auctions/snippets/lt/price.html" with max_bid=lt.get_max_bid %}
                     {% include "auctions/snippets/lt/description.html" %}
-                    {% include "auctions/snippets/lt/creation.html" %}
                 </div>
             </div>
         {% empty %}
