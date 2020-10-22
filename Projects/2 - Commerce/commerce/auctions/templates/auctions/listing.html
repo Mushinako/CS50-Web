@@ -43,9 +43,7 @@
         <div>
             <h3>Comments</h3>
             {% if user.is_authenticated and not lc.user_comment %}
-                <div class="lt-comment-link">
-                    <a href="{% url 'comment-new' lt.id %}">Add a comment</a>
-                </div>
+                {% include "auctions/snippets/lt/comment-block/new.html" %}
             {% endif %}
             {% include "auctions/snippets/lt/comment-block/entries.html" %}
         </div>

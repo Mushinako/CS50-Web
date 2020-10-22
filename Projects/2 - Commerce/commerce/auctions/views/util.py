@@ -73,11 +73,15 @@ def gen_listing_forms(lt: Listing, lb: ListingBid, watching: bool) -> ListingFor
 def gen_listing_comments(request: HttpRequest, lt: Listing) -> ListingComments:
     comments_manager: Comment.objects = lt.comments
     user = request.user
-    try:
-        user_comment = comments_manager.get(user=user)
-    except Comment.DoesNotExist:
+    if user.is_authenticated:
+        try:
+            user_comment = comments_manager.get(user=user)
+        except Comment.DoesNotExist:
+            user_comment = None
+        other_comments = comments_manager.exclude(user=user)
+    else:
         user_comment = None
-    other_comments = comments_manager.exclude(user=user)
+        other_comments = comments_manager.all()
     num_of_comments = bool(user_comment) + len(other_comments)
     lc = ListingComments(user_comment, other_comments, num_of_comments)
     return lc

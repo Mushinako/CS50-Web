@@ -1,5 +1,6 @@
 from typing import Optional
 from django.http import HttpRequest, HttpResponse
+from django.http import request
 from django.shortcuts import render
 
 from .error import _403, _404
@@ -56,6 +57,21 @@ def new_listing(request: HttpRequest) -> HttpResponse:
     })
 
 
+def watchlist(request: HttpRequest) -> HttpResponse:
+    """
+    View watchlist
+    """
+    user = request.user
+    if not user.is_authenticated:
+        return _403(request)
+    lt_manager: Listing.objects = user.watchlist
+    lt = lt_manager.all()
+    return render(request, "auctions/watchlist.html", {
+        "listings": lt,
+        "currency": CURRENCY_SYMBOL,
+    })
+
+
 def categories(request: HttpRequest) -> HttpResponse:
     """
     View all categories
@@ -79,6 +95,7 @@ def category(request: HttpRequest, category: str) -> HttpResponse:
     return render(request, "auctions/category.html", {
         "cat_name": category,
         "listings": listing_elements,
+        "currency": CURRENCY_SYMBOL,
     })
 
 

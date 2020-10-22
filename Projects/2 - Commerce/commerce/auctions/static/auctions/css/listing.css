@@ -47,15 +47,10 @@
     padding-left: 12px;
 }
 
-.lt-comment-link {
-    margin: 6px 0;
+.bid-form .form-label {
+    width: 8%;
 }
 
-.lt-comment-link a {
-    color: white;
-    text-decoration: none;
-    padding: 1px 6px;
-    border: none;
-    border-radius: 6px;
-    background-color: darkcyan;
+.bid-form .form-input {
+    width: 91%;
 }

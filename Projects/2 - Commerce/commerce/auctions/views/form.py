@@ -8,7 +8,7 @@ from ..models import Category
 
 
 class IdForm(forms.Form):
-    _id = forms.IntegerField(min_value=1,  widget=forms.HiddenInput())
+    _id = forms.IntegerField(min_value=1, widget=forms.HiddenInput())
 
 
 class WatchForm(IdForm):
@@ -33,6 +33,7 @@ class BidForm(IdForm):
                 min_value=bid_min_value, decimal_places=2,
                 widget=forms.NumberInput(attrs={
                     "id": "id-bid",
+                    "class": "form-control",
                 }), label=CURRENCY_SYMBOL, label_suffix="")
 
 
@@ -40,34 +41,40 @@ class CommentForm(IdForm):
     title = forms.CharField(
         max_length=64, widget=forms.TextInput(attrs={
             "placeholder": "Title",
-        }), label="Title")
+            "class": "form-control",
+        }), label="Title", label_suffix="")
     content = forms.CharField(
         max_length=1024, required=False, widget=forms.Textarea(attrs={
-            "placeholder": "Message (Optional)"
-        }), label="Message")
+            "placeholder": "Message (Optional)",
+            "class": "form-control",
+        }), label="Message", label_suffix="")
 
 
 class NewForm(forms.Form):
     title = forms.CharField(
         max_length=64, widget=forms.TextInput(attrs={
             "placeholder": "Title",
-        }), label="Title")
+            "class": "form-control",
+        }), label="Title", label_suffix="")
     starting_bid = forms.DecimalField(
         decimal_places=2, widget=forms.NumberInput(attrs={
             "id": "id-bid",
             "placeholder": "Starting Bid",
+            "class": "form-control",
         }), label=CURRENCY_SYMBOL, label_suffix="")
     description = forms.CharField(
         max_length=1024, required=False, widget=forms.Textarea(attrs={
-            "placeholder": "Description (Optional)"
-        }), label="Description (Optional)")
+            "placeholder": "Description (Optional)",
+            "class": "form-control",
+        }), label="Description (Optional)", label_suffix="")
     image_url = forms.URLField(required=False, widget=forms.TextInput(attrs={
         "placeholder": "Image URL (Optional)",
-    }), label="Image URL (Optional)")
+        "class": "form-control",
+    }), label="Image URL (Optional)", label_suffix="")
     categories = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(), required=False,
         widget=widgets.FilteredSelectMultiple("categories", is_stacked=False),
-        label="Categories (Optional)")
+        label="Categories (Optional)", label_suffix="")
 
     class Media:
         css = {

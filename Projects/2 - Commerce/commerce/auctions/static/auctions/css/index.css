@@ -10,8 +10,8 @@
     width: 100%;
 }
 
-.lt-title {
-    font-size: large;
+.lt-title a {
+    font-size: 32px;
     font-weight: bold;
 }
 
