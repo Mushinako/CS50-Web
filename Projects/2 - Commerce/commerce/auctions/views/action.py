@@ -1,5 +1,5 @@
 from math import ceil
-from typing import Dict, Optional
+from typing import Optional
 
 from django.db.models import Max
 from django.http import HttpResponseRedirect
@@ -14,7 +14,6 @@ from ..models import Bid, Comment, Listing, Watch
 
 def new_listing(request: HttpRequest) -> HttpResponse:
     """
-    Add a new listing
     """
 
 
@@ -50,7 +49,33 @@ def add_comment(request: HttpRequest) -> HttpResponse:
 
 def edit_comment(request: HttpRequest) -> HttpResponse:
     """
+    Edit a comment
     """
+    # Enforce "POST"
+    if request.method != "POST":
+        return _400(request)
+    f = CommentForm(request.POST)
+    # Check form validity
+    if not f.is_valid():
+        return _400(request)
+    data = f.cleaned_data
+    id_: int = data["_id"]
+    title: str = data["title"]
+    content: str = data["content"]
+    # Check corresponding listing existence
+    try:
+        com = Comment.objects.get(id=id_)
+    except Comment.DoesNotExist as err:
+        return _400(request, err)
+    user = request.user
+    # Check user is logged in
+    if user != com.user:
+        return _403(request)
+    # Add new comment
+    com.title = title
+    com.content = content
+    com.save()
+    return HttpResponseRedirect(reverse("listing", kwargs={"id_": com.listing.id}))
 
 
 def watch(request: HttpRequest) -> HttpResponse:
@@ -145,11 +170,7 @@ def bid(request: HttpRequest) -> HttpResponse:
     # Check user is not the creator
     if user == lt.created_by:
         return _403(request)
-    bids: Bid.objects = lt.bids
-    max_bid_amount: Optional[int] = bids.aggregate(
-        Max("amount"))["amount__max"]
-    if max_bid_amount is None:
-        max_bid_amount: int = lt.starting_bid
+    max_bid_amount = int(lt.get_max_bid()*100)
     # Check if the bid is larger than current
     if bid <= max_bid_amount:
         return HttpResponseRedirect(reverse("listing", kwargs={

@@ -2,6 +2,7 @@ from typing import Optional
 from django import forms
 
 from .var import CURRENCY_SYMBOL
+from ..models import Category
 
 
 class IdForm(forms.Form):
@@ -57,3 +58,22 @@ class CommentDisabledForm(forms.Form):
     content = forms.CharField(
         widget=forms.Textarea(), label="Message",
         initial="Log in to leave a comment!", disabled=True)
+
+
+class NewForm(forms.Form):
+    title = forms.CharField(
+        max_length=64, widget=forms.TextInput(attrs={
+            "placeholder": "Title",
+        }), label="Title")
+    description = forms.CharField(
+        max_length=1024, required=False, widget=forms.Textarea(attrs={
+            "placeholder": "Description (Optional)"
+        }), label="Description")
+    starting_bid = forms.DecimalField(
+        decimal_places=2, widget=forms.NumberInput(attrs={
+            "id": "id-bid",
+        }), label=CURRENCY_SYMBOL, label_suffix="")
+    image_url = forms.URLField(required=False, label="Image URL (Optional)")
+    categories = forms.MultipleChoiceField(
+        choices=[(cat.name, cat) for cat in Category.objects.all()],
+        required=False, label="Categories (Optional)")

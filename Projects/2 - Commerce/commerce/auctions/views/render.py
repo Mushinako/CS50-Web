@@ -1,9 +1,9 @@
 from typing import Optional
 from django.http import HttpRequest, HttpResponse
-from django.http import request
 from django.shortcuts import render
 
 from .error import _403, _404
+from .form import NewForm
 from .util import gen_edit_comment_forms, gen_listing_bid, gen_listing_comments, gen_listing_forms, gen_new_comment_forms
 from .var import CURRENCY_SYMBOL
 from ..models import Category, Comment, Listing, User
@@ -46,6 +46,16 @@ def listing(request: HttpRequest, id_: int, bid_err: Optional[str] = None) -> Ht
     })
 
 
+def new_listing(request: HttpRequest) -> HttpResponse:
+    """
+    Add new listing
+    """
+    new_form = NewForm()
+    return render(request, "auctions/new.html", {
+        "form": new_form,
+    })
+
+
 def categories(request: HttpRequest) -> HttpResponse:
     """
     View all categories
@@ -84,7 +94,7 @@ def comment_new(request: HttpRequest, lt_id: int) -> HttpResponse:
     # Check if user has already made a comment
     try:
         user_comment = comments_manager.get(user=request.user)
-    except Listing.DoesNotExist:
+    except Comment.DoesNotExist:
         user_comment = None
     if user_comment is not None:
         return _403(request)
@@ -102,7 +112,7 @@ def comment_edit(request: HttpRequest, com_id: int) -> HttpResponse:
     """
     try:
         com = Comment.objects.get(id=com_id)
-    except Listing.DoesNotExist as err:
+    except Comment.DoesNotExist as err:
         return _404(request, err)
     # Check if comment is made by the user
     if com.user != request.user:

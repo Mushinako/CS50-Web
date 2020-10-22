@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -32,12 +33,13 @@ class Listing(models.Model):
     def __str__(self) -> str:
         return f"{self.title}"
 
-    def get_max_bid(self) -> str:
+    def get_max_bid(self) -> float:
         bids: Bid.objects = self.bids
-        max_amount = bids.aggregate(models.Max("amount"))["amount__max"]
+        max_amount: Optional[int] = bids.aggregate(
+            models.Max("amount"))["amount__max"]
         if max_amount is None:
             max_amount = self.starting_bid
-        return f"{max_amount/100:,.2f}"
+        return max_amount/100
 
     def get_time_str(self) -> str:
         time: datetime = self.creation_time

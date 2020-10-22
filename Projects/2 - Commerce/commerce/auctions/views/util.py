@@ -14,9 +14,9 @@ from ..models import Bid, Comment, Listing
 @dataclass
 class ListingBid():
     no_bids: bool
-    num_bids: str
+    num_bids: int
     is_max_bid: bool
-    max_bid: str
+    max_bid: float
     min_starting_bid: float
     currency: str
 
@@ -50,7 +50,6 @@ def gen_listing_bid(request: HttpRequest, lt: Listing) -> ListingBid:
     bids = bids_manager.all()
     num_bids = bids.count()
     no_bids = num_bids == 0
-    num_bids_str = f"{num_bids} bid{'' if num_bids == 1 else 's'}"
     if no_bids:
         is_max_bid = False
         max_bid_amount_int = lt.starting_bid
@@ -58,9 +57,9 @@ def gen_listing_bid(request: HttpRequest, lt: Listing) -> ListingBid:
         max_bid = bids.order_by("-amount").first()
         is_max_bid = max_bid.user == request.user
         max_bid_amount_int: int = max_bid.amount
-    max_bid_amount = f"{max_bid_amount_int/100:,.2f}"
+    max_bid_amount = max_bid_amount_int/100
     min_starting_bid = (max_bid_amount_int+1)/100
-    lb = ListingBid(no_bids, num_bids_str, is_max_bid,
+    lb = ListingBid(no_bids, num_bids, is_max_bid,
                     max_bid_amount, min_starting_bid, CURRENCY_SYMBOL)
     return lb
 
@@ -100,7 +99,7 @@ def gen_listing_comments(request: HttpRequest, lt: Listing) -> ListingComments:
     user = request.user
     try:
         user_comment = comments_manager.get(user=user)
-    except Listing.DoesNotExist:
+    except Comment.DoesNotExist:
         user_comment = None
     other_comments = comments_manager.exclude(user=user)
     num_of_comments = bool(user_comment) + len(other_comments)
