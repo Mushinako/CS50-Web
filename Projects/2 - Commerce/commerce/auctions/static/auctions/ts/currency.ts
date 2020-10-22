@@ -1,7 +1,10 @@
 "use strict";
 
 function toCurrency(inputEl: HTMLInputElement): void {
-    inputEl.value = parseFloat(inputEl.value).toFixed(2);
+    const float = parseFloat(inputEl.value)
+    if (!isNaN(float)) {
+        inputEl.value = float.toFixed(2);
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -5,8 +5,7 @@ from django.db.models.query import QuerySet
 
 from django.http import HttpRequest
 
-from .form import (BidForm, BidDisabledForm, CloseForm,
-                   CommentForm, CommentDisabledForm, WatchForm)
+from .form import BidForm, CloseForm, WatchForm
 from .var import CURRENCY_SYMBOL
 from ..models import Bid, Comment, Listing
 
@@ -26,7 +25,6 @@ class ListingForms():
     close_form: CloseForm
     watch_form: WatchForm
     bid_form: BidForm
-    bid_disabled_form = BidDisabledForm()
 
 
 @dataclass
@@ -34,12 +32,6 @@ class ListingComments():
     user_comment: Optional[Comment]
     other_comments: QuerySet
     num_of_comments: int
-
-
-@dataclass
-class CommentForms():
-    comment_form: CommentForm
-    comment_disabled_form = CommentDisabledForm()
 
 
 def gen_listing_bid(request: HttpRequest, lt: Listing) -> ListingBid:
@@ -76,22 +68,6 @@ def gen_listing_forms(lt: Listing, lb: ListingBid, watching: bool) -> ListingFor
     }, bid_min_value=lb.min_starting_bid)
     lf = ListingForms(close_form, watch_form, bid_form)
     return lf
-
-
-def gen_new_comment_forms(lt: Listing) -> CommentForms:
-    comment_form = CommentForm(initial={"_id": lt.id})
-    cf = CommentForms(comment_form)
-    return cf
-
-
-def gen_edit_comment_forms(com: Comment) -> CommentForms:
-    comment_form = CommentForm(initial={
-        "_id": com.id,
-        "title": com.title,
-        "content": com.content,
-    })
-    cf = CommentForms(comment_form)
-    return cf
 
 
 def gen_listing_comments(request: HttpRequest, lt: Listing) -> ListingComments:

@@ -4,10 +4,10 @@
 {% block head %}
     {{ block.super }}
     <link href="{% static 'auctions/css/listing.css' %}" rel="stylesheet">
-    <script src="{% static 'auctions/js/currency.js' %}"></script>
 {% endblock head %}
 
 {% block actions %}
+    {% include "auctions/snippets/lt/watch.html" %}
     {% include "auctions/snippets/lt/creation.html" %}
     {% include "auctions/snippets/lt/price.html" with currency=lb.currency max_bid=lb.max_bid %}
     {% include "auctions/snippets/lt/bid/current.html" %}
@@ -20,7 +20,7 @@
         {% elif user.is_authenticated %}
             {% include "auctions/snippets/lt/bid/bid.html" %}
         {% else %}
-            {% include "auctions/snippets/lt/bid/bid-disabled.html" %}
+            <div class="auth-required">Log in to start bidding!</div>
         {% endif %}
     {% else %}
         <div class="lt-sold">This item is sold.</div>
@@ -32,4 +32,5 @@
         </div>
     {% endif %}
     {% include "auctions/snippets/lt/comment-block/entries.html" %}
+    <script type="application/javascript" src="{% static 'auctions/js/currency.js' %}"></script>
 {% endblock actions %}

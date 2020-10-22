@@ -7,19 +7,25 @@
 
 {% block head %}
     <link href="{% static 'auctions/css/new.css' %}" rel="stylesheet">
-    <script src="{% static 'auctions/js/currency.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
     <h2>New Listing</h2>
 
-    <form action="{% url 'new' %}" method="POST">
-        {% csrf_token %}
-        <table class="new-table">
-            <tbody>
-                {{ form.as_table }}
-            </tbody>
-        </table>
-        <input type="submit" value="Save">
-    </form>
+    {% if user.is_authenticated %}
+        <form action="{% url 'new' %}" method="POST">
+            {% csrf_token %}
+            <table class="new-table">
+                <tbody>
+                    {{ form.media }}
+                    {{ form.as_table }}
+                </tbody>
+            </table>
+            <input type="submit" value="Save">
+        </form>
+        <script type="application/javascript" src="{% static 'auctions/js/currency.js' %}"></script>
+        <script type="application/javascript" src="{% url 'jsi18n' %}"></script>
+    {% else %}
+        <div class="auth-required">Log in to add a listing!</div>
+    {% endif %}
 {% endblock body %}

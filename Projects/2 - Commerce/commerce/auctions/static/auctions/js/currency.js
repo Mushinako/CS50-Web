@@ -1,6 +1,9 @@
 "use strict";
 function toCurrency(inputEl) {
-    inputEl.value = parseFloat(inputEl.value).toFixed(2);
+    const float = parseFloat(inputEl.value);
+    if (!isNaN(float)) {
+        inputEl.value = float.toFixed(2);
+    }
 }
 document.addEventListener("DOMContentLoaded", () => {
     const bidInput = document.getElementById("id-bid");

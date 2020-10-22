@@ -3,8 +3,8 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 from .error import _403, _404
-from .form import NewForm
-from .util import gen_edit_comment_forms, gen_listing_bid, gen_listing_comments, gen_listing_forms, gen_new_comment_forms
+from .form import CommentForm, NewForm
+from .util import gen_listing_bid, gen_listing_comments, gen_listing_forms
 from .var import CURRENCY_SYMBOL
 from ..models import Category, Comment, Listing, User
 
@@ -98,10 +98,10 @@ def comment_new(request: HttpRequest, lt_id: int) -> HttpResponse:
         user_comment = None
     if user_comment is not None:
         return _403(request)
-    cf = gen_new_comment_forms(lt)
+    comment_form = CommentForm(initial={"_id": lt.id})
     return render(request, "auctions/comment.html", {
         "lt": lt,
-        "cf": cf,
+        "comment_form": comment_form,
         "post_url": "new-comment",
     })
 
@@ -117,10 +117,14 @@ def comment_edit(request: HttpRequest, com_id: int) -> HttpResponse:
     # Check if comment is made by the user
     if com.user != request.user:
         return _403(request)
-    cf = gen_edit_comment_forms(com)
+    comment_form = CommentForm(initial={
+        "_id": com.id,
+        "title": com.title,
+        "content": com.content,
+    })
     lt: Listing.objects = com.listing
     return render(request, "auctions/comment.html", {
         "lt": lt,
-        "cf": cf,
+        "comment_form": comment_form,
         "post_url": "edit-comment",
     })

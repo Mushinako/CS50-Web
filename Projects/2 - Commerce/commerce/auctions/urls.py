@@ -1,4 +1,5 @@
-from django.urls import path, re_path
+from django.urls import path
+from django.views import i18n
 
 from . import views
 
@@ -18,4 +19,5 @@ urlpatterns = [
     path("watchlist", views.watch, name="watch"),
     path("bid", views.bid, name="bid"),
     path("close", views.close, name="close"),
+    path("jsi18n", i18n.JavaScriptCatalog.as_view(), name="jsi18n"),
 ]

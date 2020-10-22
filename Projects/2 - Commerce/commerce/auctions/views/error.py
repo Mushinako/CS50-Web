@@ -14,5 +14,5 @@ def _403(request: HttpRequest, exception=None) -> HttpResponse:
 
 
 def _404(request: HttpRequest, exception=None) -> HttpResponse:
-    return page_not_found(request, exception)
-    # return HttpResponseRedirect(reverse("index"))
+    # return page_not_found(request, exception)
+    return HttpResponseRedirect(reverse("index"))

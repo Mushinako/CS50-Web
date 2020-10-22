@@ -1,20 +1,40 @@
 from math import ceil
-from typing import Optional
+from django.db.models.query import QuerySet
 
-from django.db.models import Max
 from django.http import HttpResponseRedirect
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.urls import reverse
 
 from .error import _400, _403
-from .form import BidForm, CloseForm, CommentForm, WatchForm
+from .form import BidForm, CloseForm, CommentForm, NewForm, WatchForm
 from ..models import Bid, Comment, Listing, Watch
 
 
 def new_listing(request: HttpRequest) -> HttpResponse:
     """
+    Add a new listing
     """
+    f = NewForm(request.POST)
+    # Check form validity
+    if not f.is_valid():
+        return _400(request)
+    user = request.user
+    # Check user is logged in
+    if not user.is_authenticated:
+        return _403(request)
+    data = f.cleaned_data
+    title: str = data["title"]
+    description: str = data["description"]
+    starting_bid = int(data["starting_bid"]*100)
+    image_url: str = data["image_url"]
+    lt = Listing(
+        title=title, description=description, starting_bid=starting_bid,
+        image_url=image_url, created_by=user)
+    lt.save()
+    categories: QuerySet = data["categories"]
+    lt.categories.set(categories)
+    return HttpResponseRedirect(reverse("listing", kwargs={"id_": lt.id}))
 
 
 def add_comment(request: HttpRequest) -> HttpResponse:
@@ -160,8 +180,7 @@ def bid(request: HttpRequest) -> HttpResponse:
         return _403(request)
     data = f.cleaned_data
     id_: int = data["_id"]
-    bid_float: float = data["bid"]
-    bid = ceil(bid_float * 100)
+    bid = ceil(data["bid"] * 100)
     # Check corresponding listing existence
     try:
         lt = Listing.objects.get(id=id_)
