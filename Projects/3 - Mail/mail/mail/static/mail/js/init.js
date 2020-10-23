@@ -3,8 +3,10 @@ let inboxButton;
 let sentButton;
 let archiveButton;
 let composeButton;
+let errorViewDiv;
 let emailsViewDiv;
 let composeViewDiv;
+let composeForm;
 let composeRecipientsInput;
 let composeSubjectInput;
 let composeBodyTextarea;
@@ -13,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     sentButton = document.getElementById("sent");
     archiveButton = document.getElementById("archived");
     composeButton = document.getElementById("compose");
+    errorViewDiv = document.getElementById("error-view");
     emailsViewDiv = document.getElementById("emails-view");
     composeViewDiv = document.getElementById("compose-view");
     composeRecipientsInput = document.getElementById("compose-recipients");

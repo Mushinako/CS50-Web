@@ -1,5 +1,6 @@
 "use strict";
 function compose_email() {
+    errorViewDiv.style.display = "none";
     emailsViewDiv.style.display = 'none';
     composeViewDiv.style.display = 'block';
     composeRecipientsInput.value = '';
@@ -7,6 +8,7 @@ function compose_email() {
     composeBodyTextarea.value = '';
 }
 function load_mailbox(mailbox) {
+    errorViewDiv.style.display = "none";
     emailsViewDiv.style.display = 'block';
     composeViewDiv.style.display = 'none';
     const titleText = document.createTextNode(mailbox.charAt(0).toUpperCase() + mailbox.slice(1));

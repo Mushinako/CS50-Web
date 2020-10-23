@@ -5,10 +5,12 @@ let archiveButton: HTMLButtonElement;
 let composeButton: HTMLButtonElement;
 
 // Views
+let errorViewDiv: HTMLDivElement;
 let emailsViewDiv: HTMLDivElement;
 let composeViewDiv: HTMLDivElement;
 
-// Compose inputs
+// Compose form
+let composeForm: HTMLFormElement;
 let composeRecipientsInput: HTMLInputElement;
 let composeSubjectInput: HTMLInputElement;
 let composeBodyTextarea: HTMLTextAreaElement;
@@ -19,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     archiveButton = <HTMLButtonElement>document.getElementById("archived")!;
     composeButton = <HTMLButtonElement>document.getElementById("compose")!;
 
+    errorViewDiv = <HTMLDivElement>document.getElementById("error-view");
     emailsViewDiv = <HTMLDivElement>document.getElementById("emails-view")!;
     composeViewDiv = <HTMLDivElement>document.getElementById("compose-view")!;
 

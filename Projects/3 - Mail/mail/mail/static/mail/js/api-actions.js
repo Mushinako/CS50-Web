@@ -1,22 +1,28 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-function sendMail(ev) {
-    return __awaiter(this, void 0, void 0, function* () {
-        ev.preventDefault();
-        const csrfToken = getCsrfToken();
-        if (csrfToken === null) { }
-        console.log(this);
-    });
+async function sendMail(ev) {
+    ev.preventDefault();
+    const csrfToken = getCsrfToken();
+    if (csrfToken === null) {
+        const errText = document.createTextNode("CSRF token not found!");
+        while (errorViewDiv.lastChild)
+            errorViewDiv.removeChild(errorViewDiv.lastChild);
+        errorViewDiv.appendChild(errText);
+        errorViewDiv.style.display = "block";
+        return;
+    }
+    const data = new FormData(this);
+    const response = await fetch("/emails", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken,
+        },
+        body: data,
+    })
+        .then(response => response.json())
+        .catch(err => console.log(err));
 }
 document.addEventListener("DOMContentLoaded", () => {
-    const composeForm = document.getElementById("compose-form");
+    composeForm = document.getElementById("compose-form");
     composeForm.addEventListener("submit", sendMail);
 });

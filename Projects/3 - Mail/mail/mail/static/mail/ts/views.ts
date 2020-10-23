@@ -1,5 +1,6 @@
 function compose_email(): void {
     // Show compose view and hide other views
+    errorViewDiv.style.display = "none";
     emailsViewDiv.style.display = 'none';
     composeViewDiv.style.display = 'block';
 
@@ -11,6 +12,7 @@ function compose_email(): void {
 
 function load_mailbox(mailbox: "inbox" | "sent" | "archive"): void {
     // Show the mailbox and hide other views
+    errorViewDiv.style.display = "none";
     emailsViewDiv.style.display = 'block';
     composeViewDiv.style.display = 'none';
 
