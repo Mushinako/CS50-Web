@@ -8,7 +8,11 @@ function toCurrency(inputEl: HTMLInputElement): void {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const bidInput = <HTMLInputElement>document.getElementById("id-bid");
+    const bidEl = document.getElementById("id-bid");
+    if (bidEl === null) {
+        return;
+    }
+    const bidInput = <HTMLInputElement>bidEl;
     toCurrency(bidInput)
     bidInput.addEventListener("change", (): void => {
         toCurrency(bidInput);

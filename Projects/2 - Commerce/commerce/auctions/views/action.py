@@ -1,6 +1,7 @@
 from math import ceil
-from django.db.models.query import QuerySet
 
+from django.contrib.auth.decorators import login_required
+from django.db.models.query import QuerySet
 from django.http import HttpResponseRedirect
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -11,6 +12,7 @@ from .form import BidForm, CloseForm, CommentForm, NewForm, WatchForm
 from ..models import Bid, Comment, Listing, Watch
 
 
+@login_required
 def new_listing(request: HttpRequest) -> HttpResponse:
     """
     Add a new listing
@@ -21,8 +23,6 @@ def new_listing(request: HttpRequest) -> HttpResponse:
         return _400(request)
     user = request.user
     # Check user is logged in
-    if not user.is_authenticated:
-        return _403(request)
     data = f.cleaned_data
     title: str = data["title"]
     description: str = data["description"]
@@ -37,6 +37,7 @@ def new_listing(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect(reverse("listing", kwargs={"id_": lt.id}))
 
 
+@login_required
 def add_comment(request: HttpRequest) -> HttpResponse:
     """
     Comment on a listing
@@ -49,9 +50,6 @@ def add_comment(request: HttpRequest) -> HttpResponse:
     if not f.is_valid():
         return _400(request)
     user = request.user
-    # Check user is logged in
-    if not user.is_authenticated:
-        return _403(request)
     data = f.cleaned_data
     id_: int = data["_id"]
     title: str = data["title"]
@@ -98,6 +96,7 @@ def edit_comment(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect(reverse("listing", kwargs={"id_": com.listing.id}))
 
 
+@login_required
 def watch(request: HttpRequest) -> HttpResponse:
     """
     Add to or remove from watchlist
@@ -110,9 +109,6 @@ def watch(request: HttpRequest) -> HttpResponse:
     if not f.is_valid():
         return _400(request)
     user = request.user
-    # Check user is logged in
-    if not user.is_authenticated:
-        return _403(request)
     data = f.cleaned_data
     id_: int = data["_id"]
     action: str = data["_action"]
@@ -163,6 +159,7 @@ def close(request: HttpRequest) -> HttpResponse:
     return HttpResponseRedirect(reverse("listing", kwargs={"id_": id_}))
 
 
+@login_required
 def bid(request: HttpRequest) -> HttpResponse:
     """
     Bid a listing
@@ -175,9 +172,6 @@ def bid(request: HttpRequest) -> HttpResponse:
     if not f.is_valid():
         return _400(request)
     user = request.user
-    # Check user is logged in
-    if not user.is_authenticated:
-        return _403(request)
     data = f.cleaned_data
     id_: int = data["_id"]
     bid = ceil(data["bid"] * 100)

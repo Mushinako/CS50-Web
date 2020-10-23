@@ -23,11 +23,11 @@
             <div class="lt-right">
                 <h3>Bids</h3>
                 {% include "auctions/snippets/lt/price.html" with currency=lb.currency max_bid=lb.max_bid %}
-                {% include "auctions/snippets/lt/bid/current.html" %}
-                {% if bid_err %}
-                    <div class="lt-bid-err">{{ bid_err }}</div>
-                {% endif %}
                 {% if lt.active %}
+                    {% include "auctions/snippets/lt/bid/current.html" %}
+                    {% if bid_err %}
+                        <div class="lt-bid-err">{{ bid_err }}</div>
+                    {% endif %}
                     {% if is_owner %}
                         {% include "auctions/snippets/lt/bid/close.html" %}
                     {% elif user.is_authenticated %}
@@ -36,7 +36,7 @@
                         <div class="auth-required">Log in to start bidding!</div>
                     {% endif %}
                 {% else %}
-                    <div class="lt-sold">This item is sold.</div>
+                    {% include "auctions/snippets/lt/bid/sold.html" %}
                 {% endif %}
             </div>
         </div>
