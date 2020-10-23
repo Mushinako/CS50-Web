@@ -1,0 +1,26 @@
+"use strict";
+let inboxButton;
+let sentButton;
+let archiveButton;
+let composeButton;
+let emailsViewDiv;
+let composeViewDiv;
+let composeRecipientsInput;
+let composeSubjectInput;
+let composeBodyTextarea;
+document.addEventListener('DOMContentLoaded', function () {
+    inboxButton = document.getElementById("inbox");
+    sentButton = document.getElementById("sent");
+    archiveButton = document.getElementById("archived");
+    composeButton = document.getElementById("compose");
+    emailsViewDiv = document.getElementById("emails-view");
+    composeViewDiv = document.getElementById("compose-view");
+    composeRecipientsInput = document.getElementById("compose-recipients");
+    composeSubjectInput = document.getElementById('compose-subject');
+    composeBodyTextarea = document.getElementById('compose-body');
+    inboxButton.addEventListener('click', () => load_mailbox('inbox'));
+    sentButton.addEventListener('click', () => load_mailbox('sent'));
+    archiveButton.addEventListener('click', () => load_mailbox('archive'));
+    composeButton.addEventListener('click', compose_email);
+    load_mailbox('inbox');
+});
