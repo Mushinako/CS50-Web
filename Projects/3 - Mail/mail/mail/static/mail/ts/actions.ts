@@ -1,4 +1,4 @@
-interface sendMailResponse {
+interface sendEmailResponse {
     message: string,
 }
 
@@ -15,7 +15,7 @@ async function sendMail(this: HTMLFormElement, ev: Event): Promise<void> {
         subject: composeSubjectInput.value || "<No Subject>",
         body: composeBodyTextarea.value,
     };
-    const responseUnchecked: potentialErrorResponse<sendMailResponse> = await fetch("/emails", {
+    const responseUnchecked: potentialErrorResponse<sendEmailResponse> = await fetch("/emails", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

@@ -12,6 +12,10 @@ textarea {
     overflow: hidden;
 }
 
+.email-preview.email-read {
+    background-color: lightgrey;
+}
+
 .email-preview>* {
     padding: 0 6px;
     background: linear-gradient(to right,#000 95%, #fff 100%);
@@ -20,29 +24,11 @@ textarea {
     -webkit-background-clip: text;
 }
 
-/* .email-preview>*::before {
-    content:'';
-    width:100%;
-    height:100%;
-    position:absolute;
-    left:0;
-    top:0;
-    background: linear-gradient(to right, transparent 80%, #fff);
-} */
-
-.email-content {
+.email-details {
     display: block;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 24px;
     padding: 24px;
-}
-
-.email-sender {
-    display: inline-block;
-}
-
-.email-recipients {
-    display: inline-block;
 }
 
 .email-title {
@@ -61,9 +47,37 @@ textarea {
 
 .email-preview .email-body {
     display: inline-block;
-    width: 55%;
+    width: 35%;
 }
 
-.email-content .email-body {
+.email-preview .email-time {
+    display: inline-block;
+    width: 20%;
+    background: linear-gradient(to right,#666 95%, #fff 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+.email-details .email-header {
     display: block;
+    border-bottom: 1px solid darkgrey;
+    padding: 16px;
+}
+
+.email-details .email-header .prefix {
+    text-align: right;
+    font-weight: bold;
+}
+
+.email-details .email-sender .content {
+    color: #666;
+}
+
+.email-details .email-recipients .content {
+    color: #666;
+}
+
+.email-details .email-body {
+    display: block;
+    padding: 24px;
 }
