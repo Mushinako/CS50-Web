@@ -10,7 +10,7 @@ let composeForm;
 let composeRecipientsInput;
 let composeSubjectInput;
 let composeBodyTextarea;
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     inboxButton = document.getElementById("inbox");
     sentButton = document.getElementById("sent");
     archiveButton = document.getElementById("archived");

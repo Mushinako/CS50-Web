@@ -18,15 +18,22 @@
 
 <div id="compose-view">
     <h3>New Email</h3>
-    <form id="compose-form">
+    <form id="compose-form" autocomplete="off">
         <div class="form-group">
             From: <input type="email" value="{{ request.user.email }}" class="form-control" disabled>
         </div>
         <div class="form-group">
-            To: <input type="email" id="compose-recipients" name="recipients" class="form-control" required>
+            To: <input type="email" id="compose-recipients" name="recipients" class="form-control" list="existing-users"
+                required multiple>
+            <datalist id="existing-users">
+                {% for user_ in all_users %}
+                    <option value="{{ user_.email }}">{{ user_.username }}</option>
+                {% endfor %}
+            </datalist>
         </div>
         <div class="form-group">
-            <input type="text" id="compose-subject" name="subject" class="form-control" placeholder="Subject">
+            <input type="text" id="compose-subject" name="subject" class="form-control" placeholder="Subject"
+                maxlength="255">
         </div>
         <textarea id="compose-body" name="body" class="form-control" placeholder="Body" autofocus required></textarea>
         <input type="submit" class="btn btn-primary" />
@@ -36,7 +43,8 @@
 
 {% block script %}
 <script src="{% static 'mail/js/init.js' %}"></script>
+<script src="{% static 'mail/js/util.js' %}"></script>
 <script src="{% static 'mail/js/csrf.js' %}"></script>
 <script src="{% static 'mail/js/views.js' %}"></script>
-<script src="{% static 'mail/js/api-actions.js' %}"></script>
+<script src="{% static 'mail/js/actions.js' %}"></script>
 {% endblock %}

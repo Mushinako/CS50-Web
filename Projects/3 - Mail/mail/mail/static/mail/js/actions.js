@@ -3,24 +3,30 @@ async function sendMail(ev) {
     ev.preventDefault();
     const csrfToken = getCsrfToken();
     if (csrfToken === null) {
-        const errText = document.createTextNode("CSRF token not found!");
-        while (errorViewDiv.lastChild)
-            errorViewDiv.removeChild(errorViewDiv.lastChild);
-        errorViewDiv.appendChild(errText);
-        errorViewDiv.style.display = "block";
+        showError("CSRF token not found!");
         return;
     }
-    const data = new FormData(this);
+    const data = {
+        recipients: composeRecipientsInput.value,
+        subject: composeSubjectInput.value || "<No Subject>",
+        body: composeBodyTextarea.value,
+    };
     const response = await fetch("/emails", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": csrfToken,
         },
-        body: data,
+        body: JSON.stringify(data),
     })
         .then(response => response.json())
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
+    if (response?.message === undefined) {
+        const errorMsg = response?.error ?? "No response got from server.";
+        showError(errorMsg);
+        return;
+    }
+    load_mailbox("sent");
 }
 document.addEventListener("DOMContentLoaded", () => {
     composeForm = document.getElementById("compose-form");

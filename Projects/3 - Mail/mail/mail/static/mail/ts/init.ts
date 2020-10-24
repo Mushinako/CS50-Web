@@ -15,7 +15,7 @@ let composeRecipientsInput: HTMLInputElement;
 let composeSubjectInput: HTMLInputElement;
 let composeBodyTextarea: HTMLTextAreaElement;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', (): void => {
     inboxButton = <HTMLButtonElement>document.getElementById("inbox")!;
     sentButton = <HTMLButtonElement>document.getElementById("sent")!;
     archiveButton = <HTMLButtonElement>document.getElementById("archived")!;
@@ -30,9 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
     composeBodyTextarea = <HTMLTextAreaElement>document.getElementById('compose-body')!;
 
     // Use buttons to toggle between views
-    inboxButton.addEventListener('click', (): void => load_mailbox('inbox'));
-    sentButton.addEventListener('click', (): void => load_mailbox('sent'));
-    archiveButton.addEventListener('click', (): void => load_mailbox('archive'));
+    inboxButton.addEventListener('click', () => load_mailbox('inbox'));
+    sentButton.addEventListener('click', () => load_mailbox('sent'));
+    archiveButton.addEventListener('click', () => load_mailbox('archive'));
     composeButton.addEventListener('click', compose_email);
 
     // By default, load the inbox
