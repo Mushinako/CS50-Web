@@ -1,3 +1,7 @@
+interface sendMailResponse {
+    message: string,
+}
+
 async function sendMail(this: HTMLFormElement, ev: Event): Promise<void> {
     ev.preventDefault();
     const csrfToken = getCsrfToken();
@@ -11,7 +15,7 @@ async function sendMail(this: HTMLFormElement, ev: Event): Promise<void> {
         subject: composeSubjectInput.value || "<No Subject>",
         body: composeBodyTextarea.value,
     };
-    const response: errorResponse | sendMailResponse | undefined = await fetch("/emails", {
+    const responseUnchecked: potentialErrorResponse<sendMailResponse> = await fetch("/emails", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -21,11 +25,8 @@ async function sendMail(this: HTMLFormElement, ev: Event): Promise<void> {
     })
         .then(response => response.json())
         .catch(err => console.error(err));
-    if (response?.message === undefined) {
-        const errorMsg = response?.error ?? "No response got from server.";
-        showError(errorMsg);
-        return;
-    }
+    const response = checkError(responseUnchecked);
+    if (response === null) return;
     load_mailbox("sent");
 }
 

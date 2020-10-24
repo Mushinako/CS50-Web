@@ -5,7 +5,6 @@ let archiveButton: HTMLButtonElement;
 let composeButton: HTMLButtonElement;
 
 // Views
-let errorViewDiv: HTMLDivElement;
 let emailsViewDiv: HTMLDivElement;
 let composeViewDiv: HTMLDivElement;
 
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', (): void => {
     archiveButton = <HTMLButtonElement>document.getElementById("archived")!;
     composeButton = <HTMLButtonElement>document.getElementById("compose")!;
 
-    errorViewDiv = <HTMLDivElement>document.getElementById("error-view");
     emailsViewDiv = <HTMLDivElement>document.getElementById("emails-view")!;
     composeViewDiv = <HTMLDivElement>document.getElementById("compose-view")!;
 

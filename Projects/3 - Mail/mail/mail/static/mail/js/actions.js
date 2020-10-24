@@ -11,7 +11,7 @@ async function sendMail(ev) {
         subject: composeSubjectInput.value || "<No Subject>",
         body: composeBodyTextarea.value,
     };
-    const response = await fetch("/emails", {
+    const responseUnchecked = await fetch("/emails", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -21,11 +21,9 @@ async function sendMail(ev) {
     })
         .then(response => response.json())
         .catch(err => console.error(err));
-    if (response?.message === undefined) {
-        const errorMsg = response?.error ?? "No response got from server.";
-        showError(errorMsg);
+    const response = checkError(responseUnchecked);
+    if (response === null)
         return;
-    }
     load_mailbox("sent");
 }
 document.addEventListener("DOMContentLoaded", () => {
