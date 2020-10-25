@@ -24,7 +24,7 @@ async function loadMailbox(mailbox) {
 }
 async function loadEmail(id, loadFromPreview = false) {
     if (loadFromPreview) {
-        fetchChangeEmailStatus(id, {
+        await fetchChangeEmailStatus(id, {
             read: true,
         });
     }

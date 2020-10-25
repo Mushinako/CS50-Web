@@ -52,3 +52,14 @@ function createTableRow({ rowClasses, headers, cells } = {}) {
     }
     return row;
 }
+function createSvg(paths, viewBox = "0 0 16 16") {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", viewBox);
+    for (const p of paths) {
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("fill-rule", "evenodd");
+        path.setAttribute("d", p);
+        svg.appendChild(path);
+    }
+    return svg;
+}

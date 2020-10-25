@@ -34,7 +34,7 @@ async function loadMailbox(mailbox: MailboxType): Promise<void> {
 async function loadEmail(id: number, loadFromPreview: boolean = false): Promise<void> {
     // Mark email read
     if (loadFromPreview) {
-        fetchChangeEmailStatus(id, {
+        await fetchChangeEmailStatus(id, {
             read: true,
         });
     }
