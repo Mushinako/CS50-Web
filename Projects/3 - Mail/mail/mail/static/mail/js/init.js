@@ -9,6 +9,7 @@ let composeForm;
 let composeRecipientsInput;
 let composeSubjectInput;
 let composeBodyTextarea;
+let userEmail;
 document.addEventListener('DOMContentLoaded', () => {
     inboxButton = document.getElementById("inbox");
     sentButton = document.getElementById("sent");
@@ -16,12 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
     composeButton = document.getElementById("compose");
     emailsViewDiv = document.getElementById("emails-view");
     composeViewDiv = document.getElementById("compose-view");
+    composeForm = document.getElementById("compose-form");
     composeRecipientsInput = document.getElementById("compose-recipients");
     composeSubjectInput = document.getElementById('compose-subject');
     composeBodyTextarea = document.getElementById('compose-body');
-    inboxButton.addEventListener('click', () => load_mailbox('inbox'));
-    sentButton.addEventListener('click', () => load_mailbox('sent'));
-    archiveButton.addEventListener('click', () => load_mailbox('archive'));
-    composeButton.addEventListener('click', compose_email);
-    load_mailbox('inbox');
+    userEmail = document.getElementById("compose-sender").value;
+    inboxButton.addEventListener('click', () => loadMailbox('inbox'));
+    sentButton.addEventListener('click', () => loadMailbox('sent'));
+    archiveButton.addEventListener('click', () => loadMailbox('archive'));
+    composeButton.addEventListener('click', composeEmail);
+    composeForm.addEventListener("submit", sendMail);
+    loadMailbox('inbox');
 });

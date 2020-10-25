@@ -1,0 +1,88 @@
+.email-details {
+    display: block;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+    padding: 24px;
+}
+
+.email-details .email-header {
+    display: grid;
+    grid-template-columns: auto 20px;
+    column-gap: 10px;
+    padding: 16px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.email-details .email-header .email-header-table {
+    display: block;
+}
+
+.email-details .email-header .email-header-table .prefix {
+    text-align: right;
+    font-weight: bold;
+}
+
+.email-details .email-header .email-header-table .email-sender .content {
+    color: #666;
+}
+
+.email-details .email-header .email-header-table .email-recipients .content {
+    color: #666;
+}
+
+.email-details .email-header .email-header-table .email-title .content {
+    font-weight: bold;
+}
+
+.email-details .email-header .email-actions {
+    display: inline-block;
+}
+
+.email-details .email-body {
+    display: block;
+    padding: 24px;
+}
+
+.email-actions>* {
+    display: block;
+}
+
+.email-actions .email-reply-action {
+    cursor: pointer;
+    transition: fill 0.2s ease-in-out;
+    fill: darkred;
+}
+
+.email-actions .email-reply-action:hover {
+    fill: red;
+}
+
+.email-actions .email-reply-all-action {
+    cursor: pointer;
+    transition: fill 0.2s ease-in-out;
+    fill: darkgoldenrod;
+}
+
+.email-actions .email-reply-all-action:hover {
+    fill: goldenrod;
+}
+
+.email-actions .email-archive-action {
+    cursor: pointer;
+    transition: fill 0.2s ease-in-out;
+    fill: darkgreen;
+}
+
+.email-actions .email-archive-action:hover {
+    fill: greenyellow;
+}
+
+.email-actions .email-unread-action {
+    cursor: pointer;
+    transition: fill 0.2s ease-in-out;
+    fill: blue;
+}
+
+.email-actions .email-unread-action:hover {
+    fill: cyan;
+}

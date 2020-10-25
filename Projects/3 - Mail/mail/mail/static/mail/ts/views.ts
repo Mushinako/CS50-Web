@@ -1,17 +1,4 @@
-interface emailInfo {
-    id: number,
-    sender: string,
-    recipients: string[],
-    subject: string,
-    body: string,
-    timestamp: string,
-    read: boolean,
-    archived: boolean,
-}
-
-type mailboxType = "inbox" | "sent" | "archive";
-
-function compose_email(): void {
+function composeEmail(): void {
     // Show compose view and hide other views
     emailsViewDiv.style.display = 'none';
     composeViewDiv.style.display = 'block';
@@ -22,7 +9,7 @@ function compose_email(): void {
     composeBodyTextarea.value = '';
 }
 
-async function load_mailbox(mailbox: mailboxType): Promise<void> {
+async function loadMailbox(mailbox: MailboxType): Promise<void> {
     // Show the mailbox and hide other views
     emailsViewDiv.style.display = 'block';
     composeViewDiv.style.display = 'none';
@@ -35,11 +22,7 @@ async function load_mailbox(mailbox: mailboxType): Promise<void> {
     emailsViewDiv.appendChild(titleH3);
 
     // Get email data from API
-    const emailsUnchecked: potentialErrorResponse<emailInfo[]> = await fetch(`/emails/${mailbox}`)
-        .then(response => response.json())
-        .catch(err => console.error(err));
-
-    const emails = checkError(emailsUnchecked);
+    const emails = await fetchMailbox(mailbox);
     if (emails === null) return;
 
     for (const email of emails) {
@@ -48,9 +31,13 @@ async function load_mailbox(mailbox: mailboxType): Promise<void> {
     }
 }
 
-async function load_email(id: number): Promise<void> {
+async function loadEmail(id: number, loadFromPreview: boolean = false): Promise<void> {
     // Mark email read
-    fetch
+    if (loadFromPreview) {
+        fetchChangeEmailStatus(id, {
+            read: true,
+        });
+    }
 
     // Show the mailbox and hide other views
     emailsViewDiv.style.display = 'block';
@@ -58,10 +45,7 @@ async function load_email(id: number): Promise<void> {
 
     clearChildren(emailsViewDiv);
 
-    const emailUnchecked: potentialErrorResponse<emailInfo> = await fetch(`/emails/${id}`)
-        .then(response => response.json())
-        .catch(err => console.error(err));
-    const email = checkError(emailUnchecked);
+    const email = await fetchEmail(id);
     if (email === null) return;
 
     const emailDiv = createEmailDetailsDiv(email);
