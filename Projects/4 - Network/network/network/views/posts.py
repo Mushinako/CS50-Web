@@ -4,7 +4,7 @@ from typing import Dict
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from ..models import Post
+from ..models import Like, Post
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -23,7 +23,8 @@ def new_post(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             "msg": "Invalid request method.",
         }, status=400)
-    if not request.user.is_authenticated:
+    user = request.user
+    if not user.is_authenticated:
         return JsonResponse({
             "msg": "You have to log in to make a post.",
         }, status=403)
@@ -32,7 +33,7 @@ def new_post(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             "msg": "Empty message content.",
         }, status=400)
-    post = Post(author=request.user, content=content)
+    post = Post(author=user, content=content)
     post.save()
     return JsonResponse({
         "msg": "Success.",
@@ -45,13 +46,15 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
      - request method not PUT: 400
      - user not logged in    : 403
      - invalid parameter     : 400
+     - nonexistent post      : 404
      - success               : 200
     """
     if request.method != "PUT":
         return JsonResponse({
             "msg": "Invalid request method.",
         }, status=400)
-    if not request.user.is_authenticated:
+    user = request.user
+    if not user.is_authenticated:
         return JsonResponse({
             "msg": "You have to log in to like/unlike",
         }, status=403)
@@ -63,9 +66,18 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
         return JsonResponse({
             "msg": "Empty message content.",
         }, status=400)
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return JsonResponse({
+            "msg": f"Unknown post ID {post_id}"
+        }, status=404)
     if status:
         # Add new like
-        pass
+        same_likes_count = Like.objects.filter(user=user, post=post).count()
+        if not same_likes_count:
+            like = Like(user=user, post=post)
+            like.save()
     else:
         # Remove existing likes
-        pass
+        Like.objects.filter(user=user, post=post).delete()
