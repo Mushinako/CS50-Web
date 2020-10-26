@@ -17,6 +17,8 @@ class Post(models.Model):
     liked_by = models.ManyToManyField(
         User, related_name="likes", through="Like", blank=True)
     creation_time = models.DateTimeField(auto_now=True)
+    is_edited = models.BooleanField(default=False)
+    last_edit_time = models.DateTimeField(blank=True)
 
     def get_num_likes(self) -> int:
         likes: Like.objects = self.liked_by
@@ -37,5 +39,5 @@ class Like(models.Model):
 
 class Follow(models.Model):
     follower = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="follows")
+        User, on_delete=models.CASCADE, related_name="followees")
     followee = models.ForeignKey(User, on_delete=models.CASCADE)

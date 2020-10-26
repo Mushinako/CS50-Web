@@ -9,5 +9,17 @@
 {% endblock title %}
 
 {% block body %}
-    TODO
+    {% if err %}
+        <div class="err">{{ err }}</div>
+    {% else %}
+        <div class="profile">
+            <h2 class="username">{{ user_.username }}</h2>
+            {% if user != user_ %}
+                <div></div>
+            {% endif %}
+            <div class="num-followers">Followed by {{ num_followers }} {{ num_followers|pluralize:"person,people" }}</div>
+            <div class="num-followees">Follows {{ num_followees }} {{ num_followees|pluralize:"person,people" }}</div>
+            {% include "network/includes/posts/post-container.html" %}
+        </div>
+    {% endif %}
 {% endblock body %}
