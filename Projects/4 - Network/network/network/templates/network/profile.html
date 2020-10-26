@@ -1,3 +1,5 @@
+{% load check_followed %}
+
 {% extends "network/layout.html" %}
 
 {% block title %}
@@ -15,7 +17,10 @@
         <div class="profile">
             <h2 class="username">{{ user_.username }}</h2>
             {% if user != user_ %}
-                <div></div>
+                <div class="follow-button">
+                    <div class="followed-button{% followed_class user user_ False%}">Unfollow</div>
+                    <div class="unfollowed-button{% followed_class user user_ False%}">Follow</div>
+                </div>
             {% endif %}
             <div class="num-followers">Followed by {{ num_followers }} {{ num_followers|pluralize:"person,people" }}</div>
             <div class="num-followees">Follows {{ num_followees }} {{ num_followees|pluralize:"person,people" }}</div>
