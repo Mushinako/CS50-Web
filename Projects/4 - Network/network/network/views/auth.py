@@ -1,17 +1,13 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from ..models import User
 
 
-def index(request):
-    return render(request, "network/index.html")
-
-
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -31,12 +27,12 @@ def login_view(request):
         return render(request, "network/login.html")
 
 
-def logout_view(request):
+def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
-def register(request):
+def register(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
