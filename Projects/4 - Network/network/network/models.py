@@ -16,7 +16,7 @@ class Post(models.Model):
     content = models.CharField(max_length=280)
     liked_by = models.ManyToManyField(
         User, related_name="likes", through="Like", blank=True)
-    time = models.DateTimeField(auto_now=True)
+    creation_time = models.DateTimeField(auto_now=True)
 
     def get_num_likes(self) -> int:
         likes: Like.objects = self.liked_by
