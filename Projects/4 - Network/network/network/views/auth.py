@@ -8,6 +8,7 @@ from ..models import User
 
 
 def login_view(request: HttpRequest) -> HttpResponse:
+    next_ = request.GET.get("next", None)
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -18,13 +19,20 @@ def login_view(request: HttpRequest) -> HttpResponse:
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return HttpResponseRedirect(reverse("index"))
+            next_ = request.GET.get("next", None)
+            if next_ is None:
+                return HttpResponseRedirect(reverse("index"))
+            else:
+                return HttpResponseRedirect(next_)
         else:
             return render(request, "network/login.html", {
                 "message": "Invalid username and/or password.",
+                "next_": next_,
             })
     else:
-        return render(request, "network/login.html")
+        return render(request, "network/login.html", {
+            "next_": next_,
+        })
 
 
 def logout_view(request: HttpRequest) -> HttpResponse:
@@ -33,6 +41,7 @@ def logout_view(request: HttpRequest) -> HttpResponse:
 
 
 def register(request: HttpRequest) -> HttpResponse:
+    next_ = request.GET.get("next", None)
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
@@ -43,6 +52,7 @@ def register(request: HttpRequest) -> HttpResponse:
         if password != confirmation:
             return render(request, "network/register.html", {
                 "message": "Passwords must match.",
+                "next_": next_,
             })
 
         # Attempt to create new user
@@ -52,8 +62,14 @@ def register(request: HttpRequest) -> HttpResponse:
         except IntegrityError:
             return render(request, "network/register.html", {
                 "message": "Username already taken.",
+                "next_": next_,
             })
         login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+        if next_ is None:
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return HttpResponseRedirect(next_)
     else:
-        return render(request, "network/register.html")
+        return render(request, "network/register.html", {
+            "next_": next_,
+        })

@@ -1,5 +1,5 @@
 
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -10,4 +10,6 @@ urlpatterns = [
     path("register", views.register, name="register"),
     path("new-post", views.new_post, name="new-post"),
     path("like", views.like_unlike, name="like"),
+    re_path(r"^profile(?:/(?P<username>[^/]+))?$",
+            views.profile, name="profile")
 ]
