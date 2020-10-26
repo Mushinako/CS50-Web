@@ -38,5 +38,4 @@ class Like(models.Model):
 class Follow(models.Model):
     follower = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="follows")
-    followee = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="followers")
+    followee = models.ForeignKey(User, on_delete=models.CASCADE)
