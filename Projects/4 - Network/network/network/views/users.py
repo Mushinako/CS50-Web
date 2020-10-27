@@ -24,7 +24,6 @@ def profile(request: HttpRequest, username: Optional[str] = None) -> HttpRespons
     followees: User.objects = user.followees
     return render(request, "network/profile.html", {
         "user_": user,
-        "posts": posts.all(),
         "num_followers": followers.all().count(),
         "num_followees": followees.all().count(),
         "is_self": is_self,

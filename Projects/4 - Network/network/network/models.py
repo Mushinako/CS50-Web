@@ -18,7 +18,7 @@ class Post(models.Model):
         User, related_name="likes", through="Like", blank=True)
     creation_time = models.DateTimeField(auto_now=True)
     is_edited = models.BooleanField(default=False)
-    last_edit_time = models.DateTimeField(blank=True)
+    last_edit_time = models.DateTimeField(blank=True, null=True)
 
     def get_num_likes(self) -> int:
         likes: Like.objects = self.liked_by
@@ -26,7 +26,7 @@ class Post(models.Model):
         return num_likes
 
     def __str__(self) -> str:
-        return f"{self.content} posted by {self.author} at {self.time}"
+        return f"{self.content} posted by {self.author} at {self.creation_time}"
 
 
 class Like(models.Model):
