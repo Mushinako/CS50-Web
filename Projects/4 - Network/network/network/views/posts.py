@@ -8,7 +8,10 @@ from ..models import Like, Post
 
 
 def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "network/index.html")
+    all_posts = Post.objects.all()
+    return render(request, "network/index.html", {
+        "posts": all_posts,
+    })
 
 
 def new_post(request: HttpRequest) -> JsonResponse:

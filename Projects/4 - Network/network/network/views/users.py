@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 
-from ..models import User
+from ..models import Post, User
 
 
 @login_required
@@ -19,10 +19,12 @@ def profile(request: HttpRequest, username: Optional[str] = None) -> HttpRespons
             return render(request, "network/profile.html", {
                 "err": f"No user with username {username} exists.",
             })
-    followers: user.objects = user.followers
-    followees: user.objects = user.followees
+    posts: Post.objects = user.posts
+    followers: User.objects = user.followers
+    followees: User.objects = user.followees
     return render(request, "network/profile.html", {
         "user_": user,
+        "posts": posts.all(),
         "num_followers": followers.all().count(),
         "num_followees": followees.all().count(),
         "is_self": is_self,
