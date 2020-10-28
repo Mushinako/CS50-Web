@@ -48,7 +48,7 @@ async function renderPost(startTime) {
         return;
     const { posts, more, loggedIn } = response;
     if (!posts.length) {
-        const postEmptyDiv = newEl("div", ["post-empty"]);
+        const postEmptyDiv = newEl("div", ["post-empty", "empty-list"]);
         postContainerDiv.appendChild(postEmptyDiv);
         postEmptyDiv.appendText("No posts yet");
     }

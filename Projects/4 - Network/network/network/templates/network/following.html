@@ -5,6 +5,7 @@
 
 {% block head %}
     <link href="{% static 'network/css/posts.css' %}" rel="stylesheet">
+    <link href="{% static 'network/css/following.css' %}" rel="stylesheet">
 {% endblock head %}
 
 {% block title %}
@@ -14,7 +15,13 @@
 {% block body %}
     <div class="following-container">
         <h2 class="following" data-followings="{{ followees|join:',' }}" id="following">My following</h2>
-        {% include "network/includes/posts/post-container.html" %}
+        {% if followees %}
+            {% include "network/includes/posts/post-container.html" %}
+        {% else %}
+            <div class="post-container">
+                <div class="no-followers empty-list">No followers yet</div>
+            </div>
+        {% endif %}
     </div>
 {% endblock body %}
 

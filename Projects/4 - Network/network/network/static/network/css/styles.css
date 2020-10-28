@@ -1,3 +1,7 @@
 .div-button {
     cursor: pointer;
 }
+
+.empty-list {
+    text-align: center;
+}
