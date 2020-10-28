@@ -1,21 +1,26 @@
-interface ErrorResponse {
-    err: string,
-}
-
-type PotentialErrorResponse<T> = T | ErrorResponse | undefined;
-
 // A few shorthand functions due to my laziness
 const byId = (id: string) => document.getElementById(id);
-const newText = (str: string) => document.createTextNode(str);
-const newEl = <K extends keyof HTMLElementTagNameMap>(tag: K) => document.createElement(tag);
+const newEl = <K extends keyof HTMLElementTagNameMap>(tag: K, classes: string[] = []) => {
+    const el = document.createElement(tag);
+    el.classList.add(...classes);
+    return el;
+};
 
 /**
- * Clear all children of an element
- * @param el {Element} - The element to be cleared
+ * Append text node to a node
+ * @param str {string} - The string to be added to the node
  */
-function clearChildren(el: Element): void {
-    while (el.lastChild) el.removeChild(el.lastChild);
-}
+Node.prototype.appendText = function (str: string): void {
+    const text = document.createTextNode(str);
+    this.appendChild(text);
+};
+
+/**
+ * Clear all children of an node
+ */
+Node.prototype.clearChildren = function (): void {
+    while (this.lastChild) this.removeChild(this.lastChild);
+};
 
 /**
  * Display error to the end user

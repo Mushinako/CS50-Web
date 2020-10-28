@@ -1,16 +1,26 @@
 "use strict";
 // A few shorthand functions due to my laziness
 const byId = (id) => document.getElementById(id);
-const newText = (str) => document.createTextNode(str);
-const newEl = (tag) => document.createElement(tag);
+const newEl = (tag, classes = []) => {
+    const el = document.createElement(tag);
+    el.classList.add(...classes);
+    return el;
+};
 /**
- * Clear all children of an element
- * @param el {Element} - The element to be cleared
+ * Append text node to a node
+ * @param str {string} - The string to be added to the node
  */
-function clearChildren(el) {
-    while (el.lastChild)
-        el.removeChild(el.lastChild);
-}
+Node.prototype.appendText = function (str) {
+    const text = document.createTextNode(str);
+    this.appendChild(text);
+};
+/**
+ * Clear all children of an node
+ */
+Node.prototype.clearChildren = function () {
+    while (this.lastChild)
+        this.removeChild(this.lastChild);
+};
 /**
  * Display error to the end user
  * @param errorMsg {string} - The error message string

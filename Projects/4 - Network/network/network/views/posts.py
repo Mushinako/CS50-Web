@@ -23,6 +23,7 @@ def post_json(post: Post, user: User) -> Dict:
     else:
         liked = False
     return {
+        "id": post.id,
         "username": post.author.username,
         "content": post.content,
         "creationTime": str(post.creation_time),
@@ -68,6 +69,7 @@ def get_post(request: HttpRequest) -> JsonResponse:
     return JsonResponse({
         "posts": posts,
         "more": more,
+        "loggedIn": request.user.is_authenticated,
     }, status=200)
 
 
@@ -119,8 +121,8 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
             "err": "You have to log in to like/unlike",
         }, status=403)
     data: Dict[str, int] = json.loads(request.body)
-    post_id = data.get("postId", None)
-    status = data.get("status", None)
+    post_id: Optional[int] = data.get("postId", None)
+    status: Optional[bool] = data.get("status", None)
     checks = (post_id, status)
     if None in checks or not all(isinstance(c, int) for c in checks):
         return JsonResponse({
