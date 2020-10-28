@@ -1,6 +1,7 @@
 const postNumberLimit = 10;
 const indexPostTimestamps: string[] = [];
 let postContainerDiv: HTMLDivElement;
+let users: string[] = [];
 
 const leftSvg = createSvg([
     "M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10a.5.5 0 0 1-.832.374l-4.5-4a.5.5 0 0 1 0-.748l4.5-4A.5.5 0 0 1 10.5 4v8z",
@@ -27,8 +28,15 @@ document.addEventListener("DOMContentLoaded", (): void => {
     postContainerDiv = <HTMLDivElement>byId("post-container");
 });
 
-async function renderPost(args: GetPostArgs): Promise<void> {
-    const searchParams = new URLSearchParams(<Record<string, string>>args);
+async function renderPost(startTime?: string): Promise<void> {
+    const searchParamsDict: Record<string, string> = {};
+    if (startTime !== undefined) {
+        searchParamsDict.startTime = startTime;
+    }
+    if (users.length) {
+        searchParamsDict.users = users.join(",");
+    }
+    const searchParams = new URLSearchParams(searchParamsDict);
     const responseUnchecked: PotentialErrorResponse<GetPostResponse> = await fetch(`posts?${searchParams}`, {
         method: "GET",
         headers: {
@@ -57,7 +65,7 @@ async function renderPost(args: GetPostArgs): Promise<void> {
         postsDiv.appendChild(postDiv);
     }
 
-    const buttonsDiv = newPostNavDiv(args.startTime !== undefined && indexPostTimestamps.length > 1, more);
+    const buttonsDiv = newPostNavDiv(startTime !== undefined && indexPostTimestamps.length > 1, more);
     postContainerDiv.appendChild(buttonsDiv);
 }
 
@@ -212,11 +220,9 @@ function newPostNavDiv(prev: boolean, next: boolean): HTMLDivElement {
             indexPostTimestamps.pop();
             if (indexPostTimestamps.length) {
                 const timestamp = indexPostTimestamps[indexPostTimestamps.length - 2];
-                renderPost({
-                    startTime: timestamp,
-                });
+                renderPost(timestamp);
             } else {
-                renderPost({});
+                renderPost();
             }
         });
     } else {
@@ -232,9 +238,7 @@ function newPostNavDiv(prev: boolean, next: boolean): HTMLDivElement {
         nextDiv.addEventListener("click", (): void => {
             if (indexPostTimestamps.length < 1) return;
             const timestamp = indexPostTimestamps[indexPostTimestamps.length - 1];
-            renderPost({
-                startTime: timestamp,
-            });
+            renderPost(timestamp);
         });
     } else {
         nextDiv.appendChild(rightDisabledSvg);

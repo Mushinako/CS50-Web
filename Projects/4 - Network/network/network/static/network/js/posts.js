@@ -2,6 +2,7 @@
 const postNumberLimit = 10;
 const indexPostTimestamps = [];
 let postContainerDiv;
+let users = [];
 const leftSvg = createSvg([
     "M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10a.5.5 0 0 1-.832.374l-4.5-4a.5.5 0 0 1 0-.748l4.5-4A.5.5 0 0 1 10.5 4v8z",
 ]);
@@ -25,8 +26,15 @@ const unlikedSvg = createSvg([
 document.addEventListener("DOMContentLoaded", () => {
     postContainerDiv = byId("post-container");
 });
-async function renderPost(args) {
-    const searchParams = new URLSearchParams(args);
+async function renderPost(startTime) {
+    const searchParamsDict = {};
+    if (startTime !== undefined) {
+        searchParamsDict.startTime = startTime;
+    }
+    if (users.length) {
+        searchParamsDict.users = users.join(",");
+    }
+    const searchParams = new URLSearchParams(searchParamsDict);
     const responseUnchecked = await fetch(`posts?${searchParams}`, {
         method: "GET",
         headers: {
@@ -52,7 +60,7 @@ async function renderPost(args) {
         const postDiv = newPostDiv(post, loggedIn);
         postsDiv.appendChild(postDiv);
     }
-    const buttonsDiv = newPostNavDiv(args.startTime !== undefined && indexPostTimestamps.length > 1, more);
+    const buttonsDiv = newPostNavDiv(startTime !== undefined && indexPostTimestamps.length > 1, more);
     postContainerDiv.appendChild(buttonsDiv);
 }
 function newPostDiv(post, loggedIn) {
@@ -188,12 +196,10 @@ function newPostNavDiv(prev, next) {
             indexPostTimestamps.pop();
             if (indexPostTimestamps.length) {
                 const timestamp = indexPostTimestamps[indexPostTimestamps.length - 2];
-                renderPost({
-                    startTime: timestamp,
-                });
+                renderPost(timestamp);
             }
             else {
-                renderPost({});
+                renderPost();
             }
         });
     }
@@ -210,9 +216,7 @@ function newPostNavDiv(prev, next) {
             if (indexPostTimestamps.length < 1)
                 return;
             const timestamp = indexPostTimestamps[indexPostTimestamps.length - 1];
-            renderPost({
-                startTime: timestamp,
-            });
+            renderPost(timestamp);
         });
     }
     else {

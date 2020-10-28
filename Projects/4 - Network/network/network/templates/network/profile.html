@@ -1,6 +1,11 @@
-{% load check_followed %}
-
 {% extends "network/layout.html" %}
+
+{% load check_followed %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'network/css/posts.css' %}" rel="stylesheet">
+{% endblock head %}
 
 {% block title %}
     {% if is_self %}
@@ -14,8 +19,8 @@
     {% if err %}
         <div class="err">{{ err }}</div>
     {% else %}
-        <div class="profile">
-            <h2 class="username">{{ user_.username }}</h2>
+        <div class="profile-container">
+            <h2 class="username" data-username="{{ user_.username }}" id="username">{{ user_.username }}</h2>
             {% if user != user_ %}
                 <div class="follow-button">
                     <div class="followed-button{% followed_class user user_ False%}">Unfollow</div>
@@ -28,3 +33,8 @@
         </div>
     {% endif %}
 {% endblock body %}
+
+{% block scripts %}
+    <script src="{% static 'network/js/posts.js' %}"></script>
+    <script src="{% static 'network/js/profile.js' %}"></script>
+{% endblock scripts %}

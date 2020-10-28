@@ -1,0 +1,24 @@
+{% extends "network/layout.html" %}
+
+{% load check_followed %}
+{% load static %}
+
+{% block head %}
+    <link href="{% static 'network/css/posts.css' %}" rel="stylesheet">
+{% endblock head %}
+
+{% block title %}
+    My following
+{% endblock title %}
+
+{% block body %}
+    <div class="following-container">
+        <h2 class="following" data-followings="{{ followees|join:',' }}" id="following">My following</h2>
+        {% include "network/includes/posts/post-container.html" %}
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script src="{% static 'network/js/posts.js' %}"></script>
+    <script src="{% static 'network/js/following.js' %}"></script>
+{% endblock scripts %}

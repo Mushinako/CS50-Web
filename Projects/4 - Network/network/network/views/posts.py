@@ -42,40 +42,54 @@ def get_post(request: HttpRequest) -> JsonResponse:
      - success               : 200
     """
     if request.method != "GET":
-        return JsonResponse({
-            "err": "Invalid request method.",
-        }, status=400)
+        return JsonResponse(
+            {
+                "err": "Invalid request method.",
+            },
+            status=400,
+        )
     start_time = request.GET.get("startTime", None)
     users = request.GET.get("users", None)
     query_args = {}
     if start_time is not None:
         try:
-            query_args["creation_time__lt"] = datetime.fromisoformat(
-                start_time)
+            query_args["creation_time__lt"] = datetime.fromisoformat(start_time)
         except ValueError:
-            return JsonResponse({
-                "err": f"{start_time} is not a valid timestamp",
-            }, status=400)
+            return JsonResponse(
+                {
+                    "err": f"{start_time} is not a valid timestamp",
+                },
+                status=400,
+            )
     if users is not None:
-        try:
-            users_list: List[str] = [u for u in users.split(",") if u]
-        except json.JSONDecodeError:
-            return JsonResponse({
-                "err": f"{users} is not a valid array of usernames",
-            }, status=400)
-        if not isinstance(users_list, list) or not all(isinstance(u, str) for u in users_list):
-            return JsonResponse({
-                "err": f"{users} is not a valid array of usernames",
-            }, status=400)
-        query_args["username__in"] = users
+        username_list = [u for u in users.split(",") if u]
+        if not username_list:
+            return JsonResponse(
+                {
+                    "err": f"{users} is not a valid array of usernames",
+                },
+                status=400,
+            )
+        users_list: List[User] = User.objects.filter(username__in=username_list)
+        if not users_list:
+            return JsonResponse(
+                {
+                    "err": f"{users} is not a valid array of usernames",
+                },
+                status=400,
+            )
+        query_args["author__in"] = users_list
     all_posts = Post.objects.filter(**query_args).order_by("-creation_time")
     posts = [post_json(post, request.user) for post in all_posts[:10]]
     more = len(all_posts) > 10
-    return JsonResponse({
-        "posts": posts,
-        "more": more,
-        "loggedIn": request.user.is_authenticated,
-    }, status=200)
+    return JsonResponse(
+        {
+            "posts": posts,
+            "more": more,
+            "loggedIn": request.user.is_authenticated,
+        },
+        status=200,
+    )
 
 
 def new_post(request: HttpRequest) -> JsonResponse:
@@ -87,24 +101,36 @@ def new_post(request: HttpRequest) -> JsonResponse:
      - success                : 200
     """
     if request.method != "POST":
-        return JsonResponse({
-            "err": "Invalid request method.",
-        }, status=400)
+        return JsonResponse(
+            {
+                "err": "Invalid request method.",
+            },
+            status=400,
+        )
     user = request.user
     if not user.is_authenticated:
-        return JsonResponse({
-            "err": "You have to log in to make a post.",
-        }, status=403)
+        return JsonResponse(
+            {
+                "err": "You have to log in to make a post.",
+            },
+            status=403,
+        )
     content = request.POST.get("content", None)
     if not content:
-        return JsonResponse({
-            "err": "Empty message content.",
-        }, status=400)
+        return JsonResponse(
+            {
+                "err": "Empty message content.",
+            },
+            status=400,
+        )
     post = Post(author=user, content=content)
     post.save()
-    return JsonResponse({
-        "msg": "Success.",
-    }, status=200)
+    return JsonResponse(
+        {
+            "msg": "Success.",
+        },
+        status=200,
+    )
 
 
 def like_unlike(request: HttpRequest) -> JsonResponse:
@@ -117,28 +143,35 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
      - success               : 200
     """
     if request.method != "PUT":
-        return JsonResponse({
-            "err": "Invalid request method.",
-        }, status=400)
+        return JsonResponse(
+            {
+                "err": "Invalid request method.",
+            },
+            status=400,
+        )
     user = request.user
     if not user.is_authenticated:
-        return JsonResponse({
-            "err": "You have to log in to like/unlike",
-        }, status=403)
-    data: Dict[str, int] = json.loads(request.body)
+        return JsonResponse(
+            {
+                "err": "You have to log in to like/unlike",
+            },
+            status=403,
+        )
+    data: Dict = json.loads(request.body)
     post_id: Optional[int] = data.get("postId", None)
     status: Optional[bool] = data.get("status", None)
     checks = (post_id, status)
     if None in checks or not all(isinstance(c, int) for c in checks):
-        return JsonResponse({
-            "err": "Empty message content.",
-        }, status=400)
+        return JsonResponse(
+            {
+                "err": "Empty message content.",
+            },
+            status=400,
+        )
     try:
         post = Post.objects.get(id=post_id)
     except Post.DoesNotExist:
-        return JsonResponse({
-            "err": f"Unknown post ID {post_id}"
-        }, status=404)
+        return JsonResponse({"err": f"Unknown post ID {post_id}"}, status=404)
     if status:
         # Add new like
         same_likes_count = Like.objects.filter(user=user, post=post).count()
@@ -148,6 +181,9 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
     else:
         # Remove existing likes
         Like.objects.filter(user=user, post=post).delete()
-    return JsonResponse({
-        "msg": "Success.",
-    }, status=200)
+    return JsonResponse(
+        {
+            "msg": "Success.",
+        },
+        status=200,
+    )

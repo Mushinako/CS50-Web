@@ -1,0 +1,25 @@
+{% extends "network/layout.html" %}
+
+{% block title %}
+    {% if edit %}
+        Edit post
+    {% else %}
+        New post
+    {% endif %}
+{% endblock title %}
+
+{% block body %}
+
+    <h2>
+        {% if edit %}
+            Edit post
+        {% else %}
+            New post
+        {% endif %}
+    </h2>
+
+    {% if err %}
+        <div>{{ err }}</div>
+    {% endif %}
+
+{% endblock body %}
