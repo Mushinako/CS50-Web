@@ -1,0 +1,54 @@
+.post {
+    border-bottom: 1px solid gray;
+    padding: 1rem;
+}
+
+.post-username {
+    font-weight: bold;
+}
+
+.post-content {
+    border: 0.5px solid lightgray;
+    border-radius: 1rem;
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0.5rem;
+}
+
+.post-time {
+    color: gray;
+    font-size: small;
+}
+
+.post-likes>* {
+    display: inline-block;
+}
+
+.post-like-button {
+    margin: 0 0.5rem;
+    fill: crimson;
+}
+
+.post-like-count {
+    font-size: small;
+}
+
+.post-liked-button,
+.post-unliked-button {
+    display: inline-block;
+    width: 1rem;
+}
+
+.post-nav-prev,
+.post-nav-next {
+    display: inline-block;
+    width: 3rem;
+}
+
+.post-nav {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.post-nav>* {
+    margin: 0 1rem;
+}

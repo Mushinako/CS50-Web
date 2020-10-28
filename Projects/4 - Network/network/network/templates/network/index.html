@@ -1,10 +1,15 @@
 {% extends "network/layout.html" %}
 {% load static %}
 
+{% block head %}
+    <link href="{% static 'network/css/posts.css' %}" rel="stylesheet">
+{% endblock head %}
+
 {% block body %}
     {% include "network/includes/posts/post-container.html" %}
 {% endblock body %}
 
 {% block scripts %}
-    <script src="{% static 'network/js/post.js' %}"></script>
+    <script src="{% static 'network/js/posts.js' %}"></script>
+    <script src="{% static 'network/js/index.js' %}"></script>
 {% endblock scripts %}

@@ -3,6 +3,11 @@ interface Node {
     clearChildren(): void,
 }
 
+interface GetPostArgs {
+    startTime?: string,
+    users?: string,
+}
+
 interface ErrorResponse {
     err: string,
 }

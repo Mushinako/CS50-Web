@@ -49,11 +49,16 @@ def get_post(request: HttpRequest) -> JsonResponse:
     users = request.GET.get("users", None)
     query_args = {}
     if start_time is not None:
-        # Change `now`
-        query_args["creation_time__lt"] = datetime.now()
+        try:
+            query_args["creation_time__lt"] = datetime.fromisoformat(
+                start_time)
+        except ValueError:
+            return JsonResponse({
+                "err": f"{start_time} is not a valid timestamp",
+            }, status=400)
     if users is not None:
         try:
-            users_list: List[str] = json.loads(users)
+            users_list: List[str] = [u for u in users.split(",") if u]
         except json.JSONDecodeError:
             return JsonResponse({
                 "err": f"{users} is not a valid array of usernames",

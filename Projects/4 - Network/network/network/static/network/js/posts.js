@@ -1,7 +1,7 @@
+"use strict";
 const postNumberLimit = 10;
-const indexPostTimestamps: string[] = [];
-let postContainerDiv: HTMLDivElement;
-
+const indexPostTimestamps = [];
+let postContainerDiv;
 const leftSvg = createSvg([
     "M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm10.5 10a.5.5 0 0 1-.832.374l-4.5-4a.5.5 0 0 1 0-.748l4.5-4A.5.5 0 0 1 10.5 4v8z",
 ]);
@@ -22,115 +22,101 @@ const likedSvg = createSvg([
 const unlikedSvg = createSvg([
     "M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z",
 ]);
-
-document.addEventListener("DOMContentLoaded", (): void => {
-    postContainerDiv = <HTMLDivElement>byId("post-container");
+document.addEventListener("DOMContentLoaded", () => {
+    postContainerDiv = byId("post-container");
 });
-
-async function renderPost(startTime?: string): Promise<void> {
-    const responseUnchecked: PotentialErrorResponse<GetPostResponse> = await fetch("posts")
+async function renderPost(args) {
+    const searchParams = new URLSearchParams(args);
+    const responseUnchecked = await fetch(`posts?${searchParams}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
         .then(res => res.json())
         .catch(err => console.error(err));
     const response = checkError(responseUnchecked);
-    if (response === null) return;
-
+    if (response === null)
+        return;
     const { posts, more, loggedIn } = response;
+    if (!posts.length) {
+        const postEmptyDiv = newEl("div", ["post-empty"]);
+        postContainerDiv.appendChild(postEmptyDiv);
+        postEmptyDiv.appendText("No posts yet");
+    }
     indexPostTimestamps.push(posts[posts.length - 1].creationTime);
-
+    postContainerDiv.clearChildren();
     const postsDiv = newEl("div", ["posts"]);
     postContainerDiv.append(postsDiv);
     for (const post of posts) {
         const postDiv = newPostDiv(post, loggedIn);
         postsDiv.appendChild(postDiv);
     }
-
-    const buttonsDiv = newPostNavDiv(startTime !== undefined && indexPostTimestamps.length > 1, more);
+    const buttonsDiv = newPostNavDiv(args.startTime !== undefined && indexPostTimestamps.length > 1, more);
     postContainerDiv.appendChild(buttonsDiv);
 }
-
-function newPostDiv(post: PostData, loggedIn: boolean): HTMLDivElement {
+function newPostDiv(post, loggedIn) {
     const postDiv = newEl("div", ["post"]);
-
-    // Title
-    const titleDiv = newEl("div", ["post-title"]);
-    postDiv.appendChild(titleDiv);
-
-    const usernameSpan = newEl("span", ["post-username"]);
-    titleDiv.appendChild(usernameSpan);
-    usernameSpan.appendText(post.username);
-
-    titleDiv.appendText(" posted:");
-
+    // User
+    const usernameDiv = newEl("div", ["post-username"]);
+    postDiv.appendChild(usernameDiv);
+    usernameDiv.appendText(post.username);
     // Content
     const contentDiv = newEl("div", ["post-content"]);
     postDiv.appendChild(contentDiv);
     contentDiv.appendText(post.content);
-
     // Time
     const timeDiv = newEl("div", ["post-time"]);
     postDiv.appendChild(timeDiv);
-
     const creationTimeDiv = newEl("div", ["post-time-creation"]);
     timeDiv.appendChild(creationTimeDiv);
     creationTimeDiv.appendText(`Created at ${post.creationTime}`);
-
     if (post.editTime !== null) {
         const editTimeDiv = newEl("div", ["post-time-edit"]);
         timeDiv.appendChild(editTimeDiv);
         editTimeDiv.appendText(`Last edited at ${post.editTime}`);
     }
-
     // Likes
     const likesDiv = newEl("div", ["post-likes"]);
     postDiv.appendChild(likesDiv);
-
     const likeButtonDiv = newEl("div", ["post-like-button"]);
     likesDiv.appendChild(likeButtonDiv);
     likeButtonDiv.dataset.id = `${post.id}`;
     likeButtonDiv.dataset.liked = post.liked ? "1" : "0";
-
     if (post.liked) {
-        likeButtonDiv.appendChild(likedSvg);
+        likeButtonDiv.appendChild(likedSvg.cloneNode(true));
         likeButtonDiv.classList.add("post-liked-button");
-    } else {
-        likeButtonDiv.appendChild(unlikedSvg);
+    }
+    else {
+        likeButtonDiv.appendChild(unlikedSvg.cloneNode(true));
         likeButtonDiv.classList.add("post-unliked-button");
     }
-
     if (loggedIn) {
         likeButtonDiv.classList.add("div-button");
         likeButtonDiv.addEventListener("click", likedButtonClickListener);
     }
-
-    const likeCountDiv = newEl("div", ["like-count"]);
+    const likeCountDiv = newEl("div", ["post-like-count"]);
     likesDiv.appendChild(likeCountDiv);
-
-    const likeCountNumSpan = newEl("span", ["like-count-num"]);
+    const likeCountNumSpan = newEl("span", ["post-like-count-num"]);
     likeCountDiv.appendChild(likeCountNumSpan);
     likeCountNumSpan.appendText(`${post.likeCount}`);
-    likeCountNumSpan.id = `like-count-num-${post.id}`;
-
+    likeCountNumSpan.id = `post-like-count-num-${post.id}`;
     likeCountDiv.appendText(" ");
-
     const likeCountPluralSpan = newEl("span");
     likeCountDiv.appendChild(likeCountPluralSpan);
     likeCountPluralSpan.appendText(post.likeCount === 1 ? "person" : "people");
-    likeCountPluralSpan.id = `like-count-plural-${post.id}`;
-
+    likeCountPluralSpan.id = `post-like-count-plural-${post.id}`;
     likeCountDiv.appendText(" liked this post");
-
     return postDiv;
 }
-
-async function likedButtonClickListener(ev: MouseEvent): Promise<void> {
-    const likeButtonDiv = <HTMLDivElement>ev.target;
-    const postId = +likeButtonDiv.dataset.id!;
+async function likedButtonClickListener() {
+    const postId = +this.dataset.id;
     if (isNaN(postId)) {
-        console.error(`${likeButtonDiv.dataset.id} is not a number`);
+        console.error(`${this.dataset.id} is not a number`);
         return;
     }
-    let liked: boolean;
-    switch (likeButtonDiv.dataset.liked) {
+    let liked;
+    switch (this.dataset.liked) {
         case "1":
             liked = true;
             break;
@@ -138,21 +124,19 @@ async function likedButtonClickListener(ev: MouseEvent): Promise<void> {
             liked = false;
             break;
         default:
-            console.error(`${likeButtonDiv.dataset.liked} is not a valid like status`)
+            console.error(`${this.dataset.liked} is not a valid like status`);
             return;
     }
-
-    const likeCountNumSpan = <HTMLSpanElement>byId(`like-count-num-${postId}`)!;
+    const likeCountNumSpan = byId(`post-like-count-num-${postId}`);
     let countNum = +likeCountNumSpan.innerText;
     if (isNaN(countNum)) {
         console.error(`${likeCountNumSpan.innerText} is not a number`);
         return;
     }
-
     const csrfToken = getCsrfToken();
-    if (csrfToken === null) return;
-
-    const responseUnchecked: PotentialErrorResponse<SuccessResponse> = await fetch("like", {
+    if (csrfToken === null)
+        return;
+    const responseUnchecked = await fetch("like", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -166,67 +150,74 @@ async function likedButtonClickListener(ev: MouseEvent): Promise<void> {
         .then(res => res.json())
         .catch(err => console.log(err));
     const response = checkError(responseUnchecked);
-    if (response === null) return;
-
-    likeButtonDiv.clearChildren();
-    likeButtonDiv.dataset.id = `${postId}`;
-    likeButtonDiv.dataset.liked = liked ? "1" : "0";
+    if (response === null)
+        return;
+    this.clearChildren();
+    this.classList.remove("post-liked-button", "post-unliked-button");
     if (!liked) {
-        likeButtonDiv.appendChild(likedSvg);
-        likeButtonDiv.classList.add("post-liked-button");
-        countNum--;
-    } else {
-        likeButtonDiv.appendChild(unlikedSvg);
-        likeButtonDiv.classList.add("post-unliked-button");
+        this.dataset.liked = "1";
+        this.classList.add("post-liked-button");
+        this.appendChild(likedSvg.cloneNode(true));
         countNum++;
     }
-    likeButtonDiv.classList.add("div-button");
-    likeButtonDiv.addEventListener("click", likedButtonClickListener);
-
+    else {
+        this.dataset.liked = "0";
+        this.classList.add("post-unliked-button");
+        this.appendChild(unlikedSvg.cloneNode(true));
+        countNum--;
+    }
+    this.classList.add("div-button");
+    this.addEventListener("click", likedButtonClickListener);
     likeCountNumSpan.clearChildren();
     likeCountNumSpan.appendText(`${countNum}`);
-    const likeCountPluralSpan = <HTMLSpanElement>byId(`like-count-plural-${postId}`);
+    const likeCountPluralSpan = byId(`post-like-count-plural-${postId}`);
     likeCountPluralSpan.clearChildren();
     likeCountPluralSpan.appendText(countNum === 1 ? "person" : "people");
 }
-
-function newPostNavDiv(prev: boolean, next: boolean): HTMLDivElement {
+function newPostNavDiv(prev, next) {
     const buttonsDiv = newEl("div", ["post-nav"]);
-
     const prevDiv = newEl("div", ["post-nav-prev"]);
     buttonsDiv.appendChild(prevDiv);
     if (prev) {
         prevDiv.appendChild(leftSvg);
         prevDiv.classList.add("post-nav-enabled", "div-button");
-        prevDiv.addEventListener("click", (): void => {
-            if (indexPostTimestamps.length < 2) return;
-            if (indexPostTimestamps.length === 2) {
-                renderPost();
-            } else {
-                indexPostTimestamps.pop();
+        prevDiv.addEventListener("click", () => {
+            if (indexPostTimestamps.length < 2)
+                return;
+            indexPostTimestamps.pop();
+            indexPostTimestamps.pop();
+            if (indexPostTimestamps.length) {
                 const timestamp = indexPostTimestamps[indexPostTimestamps.length - 2];
-                renderPost(timestamp);
+                renderPost({
+                    startTime: timestamp,
+                });
+            }
+            else {
+                renderPost({});
             }
         });
-    } else {
+    }
+    else {
         prevDiv.appendChild(leftDisabledSvg);
         prevDiv.classList.add("post-nav-disabled");
     }
-
     const nextDiv = newEl("div", ["post-nav-next"]);
     buttonsDiv.appendChild(nextDiv);
     if (next) {
         nextDiv.appendChild(rightSvg);
         nextDiv.classList.add("post-nav-enabled", "div-button");
-        nextDiv.addEventListener("click", (): void => {
-            if (indexPostTimestamps.length < 1) return;
+        nextDiv.addEventListener("click", () => {
+            if (indexPostTimestamps.length < 1)
+                return;
             const timestamp = indexPostTimestamps[indexPostTimestamps.length - 1];
-            renderPost(timestamp);
+            renderPost({
+                startTime: timestamp,
+            });
         });
-    } else {
+    }
+    else {
         nextDiv.appendChild(rightDisabledSvg);
         nextDiv.classList.add("post-nav-disabled");
     }
-
     return buttonsDiv;
 }
