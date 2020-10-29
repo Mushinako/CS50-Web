@@ -3,6 +3,10 @@ interface Node {
     clearChildren(): void,
 }
 
+interface Date {
+    getTimePart(): number,
+}
+
 interface GetPostArgs {
     startTime?: string,
     users?: string,

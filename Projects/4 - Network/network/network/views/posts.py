@@ -111,30 +111,33 @@ def edit_view(request: HttpRequest) -> HttpResponse:
             },
             status=400,
         )
-    id_ = request.GET.get("id_", None)
-    if id_ is None:
+    id_str = request.GET.get("id_", None)
+    if id_str is None:
         return render(request, "network/edit.html")
-    else:
-        try:
-            post = Post.objects.get(id=id_)
-        except Post.DoesNotExist:
-            return JsonResponse({"err": f"{id_} is not a valid post id"}, status=400)
-        if post.author != request.user:
-            return JsonResponse(
-                {
-                    "err": "You aren't the author of this post.",
-                },
-                status=403,
-            )
-        return render(
-            request,
-            "network/edit.html",
+    try:
+        id_ = int(id_str)
+    except ValueError:
+        return JsonResponse({"err": f"{id_str} is not a valid post id"}, status=400)
+    try:
+        post = Post.objects.get(id=id_)
+    except Post.DoesNotExist:
+        return JsonResponse({"err": f"{id_} is not a valid post id"}, status=400)
+    if post.author != request.user:
+        return JsonResponse(
             {
-                "edit": True,
-                "id_": id_,
-                "content": post.content,
+                "err": "You aren't the author of this post.",
             },
+            status=403,
         )
+    return render(
+        request,
+        "network/edit.html",
+        {
+            "edit": True,
+            "id_": id_,
+            "content": post.content,
+        },
+    )
 
 
 def edit_post(request: HttpRequest) -> JsonResponse:

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -21,14 +22,22 @@ class Post(models.Model):
     liked_by = models.ManyToManyField(
         User, related_name="likes", through="Like", blank=True
     )
-    creation_time = models.DateTimeField(auto_now=True)
+    creation_time = models.DateTimeField(editable=False)
     is_edited = models.BooleanField(default=False)
-    last_edit_time = models.DateTimeField(blank=True, null=True)
+    last_edit_time = models.DateTimeField()
 
     def get_num_likes(self) -> int:
         likes: Like.objects = self.liked_by
         num_likes = likes.all().count()
         return num_likes
+
+    def save(self, *args, **kwargs) -> None:
+        if self.id:
+            self.is_edited = True
+        else:
+            self.creation_time = timezone.now()
+        self.last_edit_time = timezone.now()
+        return super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return f"{self.content} posted by {self.author} at {self.creation_time}"

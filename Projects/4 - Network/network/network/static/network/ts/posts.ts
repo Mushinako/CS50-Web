@@ -60,8 +60,9 @@ async function renderPost(startTime?: string): Promise<void> {
 
     const postsDiv = newEl("div", ["posts"]);
     postContainerDiv.append(postsDiv);
+    const now = Date.now() / 1000;
     for (const post of posts) {
-        const postDiv = newPostDiv(post, loggedIn);
+        const postDiv = newPostDiv(post, loggedIn, now);
         postsDiv.appendChild(postDiv);
     }
 
@@ -69,7 +70,7 @@ async function renderPost(startTime?: string): Promise<void> {
     postContainerDiv.appendChild(buttonsDiv);
 }
 
-function newPostDiv(post: PostData, loggedIn: boolean): HTMLDivElement {
+function newPostDiv(post: PostData, loggedIn: boolean, now: number): HTMLDivElement {
     const postDiv = newEl("div", ["post"]);
 
     // User
@@ -101,12 +102,14 @@ function newPostDiv(post: PostData, loggedIn: boolean): HTMLDivElement {
 
     const creationTimeDiv = newEl("div", ["post-time-creation"]);
     timeDiv.appendChild(creationTimeDiv);
-    creationTimeDiv.appendText(`Created at ${post.creationTime}`);
+    const creationTime = Date.parse(post.creationTime) / 1000;
+    creationTimeDiv.appendText(`Created ${timeDiff(now, creationTime)}`);
 
     if (post.editTime !== null) {
         const editTimeDiv = newEl("div", ["post-time-edit"]);
         timeDiv.appendChild(editTimeDiv);
-        editTimeDiv.appendText(`Last edited at ${post.editTime}`);
+        const editTime = Date.parse(post.editTime) / 1000;
+        editTimeDiv.appendText(`Last edited ${timeDiff(now, editTime)}`);
     }
 
     // Likes

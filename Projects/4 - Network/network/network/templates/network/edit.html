@@ -28,7 +28,7 @@
             <input type="hidden" name="post-id" value="{{ id_ }}">
         {% endif %}
         <div class="form-group">
-            <textarea autofocus required class="form-control" id="content" name="content" {% if edit %}value="{{ content }}"{% endif %} aria-describedby="content-help" rows="5" maxlength="280" placeholder="What's on your mind?"></textarea>
+            <textarea autofocus required class="form-control" id="content" name="content" aria-describedby="content-help" rows="5" maxlength="280" placeholder="What's on your mind?">{% if edit %}{{ content }}{% endif %}</textarea>
             <small id="content-help" class="form-text text-muted">
                 You post can have up to 280 characters
             </small>
