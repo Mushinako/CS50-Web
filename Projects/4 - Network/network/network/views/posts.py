@@ -2,8 +2,11 @@ import json
 from datetime import datetime
 from typing import Dict, List, Optional
 
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls.base import reverse
 
 from ..models import Like, Post, User
 
@@ -92,7 +95,40 @@ def get_post(request: HttpRequest) -> JsonResponse:
     )
 
 
-def new_post(request: HttpRequest) -> JsonResponse:
+@login_required
+def edit_view(request: HttpRequest) -> HttpResponse:
+    """
+    Post edit view
+     - request method not GET : 400
+     - No post matching id_   : 400
+    """
+    if request.method != "GET":
+        return JsonResponse(
+            {
+                "err": "Invalid request method.",
+            },
+            status=400,
+        )
+    id_ = request.GET.get("id_", None)
+    if id_ is None:
+        return render(request, "network/edit.html")
+    else:
+        try:
+            post = Post.objects.get(id=id_)
+        except Post.DoesNotExist:
+            return JsonResponse({"err": f"{id_} is not a valid post id"}, status=400)
+        return render(
+            request,
+            "network/edit.html",
+            {
+                "edit": True,
+                "id_": id_,
+                "content": post.content,
+            },
+        )
+
+
+def edit_post(request: HttpRequest) -> JsonResponse:
     """
     New post reciever
      - request method not POST: 400
@@ -123,14 +159,17 @@ def new_post(request: HttpRequest) -> JsonResponse:
             },
             status=400,
         )
-    post = Post(author=user, content=content)
+    id_ = request.POST.get("post-id", None)
+    if id_ is None:
+        post = Post(author=user, content=content)
+    else:
+        try:
+            post = Post.objects.get(id=id_)
+        except Post.DoesNotExist:
+            return JsonResponse({"err": f"{id_} is not a valid post id"}, status=400)
+        post.content = content
     post.save()
-    return JsonResponse(
-        {
-            "msg": "Success.",
-        },
-        status=200,
-    )
+    return HttpResponseRedirect(reverse("index"))
 
 
 def like_unlike(request: HttpRequest) -> JsonResponse:
@@ -160,8 +199,11 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
     data: Dict = json.loads(request.body)
     post_id: Optional[int] = data.get("postId", None)
     status: Optional[bool] = data.get("status", None)
-    checks = (post_id, status)
-    if None in checks or not all(isinstance(c, int) for c in checks):
+    if (
+        None in (post_id, status)
+        or not isinstance(post_id, int)
+        or not isinstance(status, bool)
+    ):
         return JsonResponse(
             {
                 "err": "Empty message content.",
@@ -174,10 +216,7 @@ def like_unlike(request: HttpRequest) -> JsonResponse:
         return JsonResponse({"err": f"Unknown post ID {post_id}"}, status=404)
     if status:
         # Add new like
-        same_likes_count = Like.objects.filter(user=user, post=post).count()
-        if not same_likes_count:
-            like = Like(user=user, post=post)
-            like.save()
+        Like.objects.get_or_create(user=user, post=post)
     else:
         # Remove existing likes
         Like.objects.filter(user=user, post=post).delete()

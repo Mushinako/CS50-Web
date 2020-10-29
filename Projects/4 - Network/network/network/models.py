@@ -4,18 +4,23 @@ from django.db import models
 
 class User(AbstractUser):
     followers = models.ManyToManyField(
-        "self", symmetrical=False, through="Follow", blank=True)
+        "self",
+        related_name="followees",
+        symmetrical=False,
+        through="Follow",
+        blank=True,
+    )
 
     def __str__(self) -> str:
         return f"{self.username}"
 
 
 class Post(models.Model):
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="posts")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="posts")
     content = models.CharField(max_length=280)
     liked_by = models.ManyToManyField(
-        User, related_name="likes", through="Like", blank=True)
+        User, related_name="likes", through="Like", blank=True
+    )
     creation_time = models.DateTimeField(auto_now=True)
     is_edited = models.BooleanField(default=False)
     last_edit_time = models.DateTimeField(blank=True, null=True)
@@ -39,5 +44,11 @@ class Like(models.Model):
 
 class Follow(models.Model):
     follower = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="followees")
-    followee = models.ForeignKey(User, on_delete=models.CASCADE)
+        User, on_delete=models.CASCADE, related_name="followee"
+    )
+    followee = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="follower"
+    )
+
+    def __str__(self) -> str:
+        return f"{self.follower} follows {self.followee}"

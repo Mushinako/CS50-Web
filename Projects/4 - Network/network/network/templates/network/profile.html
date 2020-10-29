@@ -1,6 +1,5 @@
 {% extends "network/layout.html" %}
 
-{% load check_followed %}
 {% load static %}
 
 {% block head %}
@@ -23,13 +22,12 @@
         <div class="profile-container">
             <h2 class="username" data-username="{{ user_.username }}" id="username">{{ user_.username }}</h2>
             {% if user != user_ %}
-                <div class="follow-button">
-                    <div class="followed-button div-button {% followed_class user user_ False %}" id="followed-button">Unfollow</div>
-                    <div class="unfollowed-button div-button {% followed_class user user_ True %}" id="unfollowed-button">Follow</div>
+                <div class="follow-button-container">
+                    <div class="follow-button div-button {% if follows %}followed-button{% else %}unfollowed-button{% endif %}" id="follow-button"></div>
                 </div>
             {% endif %}
             <div class="num-followers">Followed by {{ num_followers }} {{ num_followers|pluralize:"person,people" }}</div>
-            <div class="num-followees">Follows {{ num_followees }} {{ num_followees|pluralize:"person,people" }}</div>
+            <div class="num-followees">Follows <span id="num-followees">{{ num_followees }}</span> <span id="num-followees-pluralize">{{ num_followees|pluralize:"person,people" }}</span></div>
             {% include "network/includes/posts/post-container.html" %}
         </div>
     {% endif %}

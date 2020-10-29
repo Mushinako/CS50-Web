@@ -2,14 +2,6 @@
     cursor: pointer;
 }
 
-.button-visible {
-    display: block;
-}
-
-.button-hidden {
-    display: none;
-}
-
 .empty-list {
     text-align: center;
 }

@@ -4,14 +4,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const username = usernameH2.dataset.username;
     users = [username];
     renderPost();
-    const followedButton = byId("followed-button");
-    const unfollowedButton = byId("unfollowed-button");
-    if (followedButton === null || unfollowedButton === null)
-        return;
-    followedButton.addEventListener("click", () => followButtonListener(username, true, followedButton, unfollowedButton));
-    unfollowedButton.addEventListener("click", () => followButtonListener(username, false, unfollowedButton, followedButton));
+    const followButtonDiv = byId("follow-button");
+    if (followButtonDiv.classList.contains("followed-button")) {
+        followButtonDiv.appendText("Unfollow");
+        followButtonDiv.addEventListener("click", () => followButtonListener(username, true));
+    }
+    else {
+        followButtonDiv.appendText("Follow");
+        followButtonDiv.addEventListener("click", () => followButtonListener(username, false));
+    }
 });
-async function followButtonListener(username, currentStatus, hideDiv, showDiv) {
+async function followButtonListener(username, currentStatus) {
+    const followNumSpan = byId("num-followees");
+    let followNum = +followNumSpan.innerText;
+    if (isNaN(followNum)) {
+        console.error(`${followNumSpan.innerText} is not a number`);
+        return;
+    }
     const csrfToken = getCsrfToken();
     if (csrfToken === null)
         return;
@@ -31,8 +40,28 @@ async function followButtonListener(username, currentStatus, hideDiv, showDiv) {
     const response = checkError(responseUnchecked);
     if (response === null)
         return;
-    hideDiv.classList.remove("button-visible");
-    hideDiv.classList.add("button-hidden");
-    showDiv.classList.remove("button-hidden");
-    showDiv.classList.add("button-visible");
+    let followButtonDiv = byId("follow-button");
+    const followButtonDivParent = followButtonDiv.parentElement;
+    followButtonDivParent.clearChildren();
+    if (currentStatus) {
+        followButtonDiv = newEl("div", ["follow-button", "div-button", "unfollowed-button"]);
+        followButtonDiv.appendText("Follow");
+        followNum--;
+    }
+    else {
+        followButtonDiv = newEl("div", ["follow-button", "div-button", "followed-button"]);
+        followButtonDiv.appendText("Unfollow");
+        followNum++;
+    }
+    followButtonDivParent.appendChild(followButtonDiv);
+    followButtonDiv.id = "follow-button";
+    followButtonDiv.addEventListener("click", () => followButtonListener(username, !currentStatus));
+    followNumSpan.clearChildren();
+    followNumSpan.appendText(`${followNum}`);
+    const numFolloweesPluralizeDiv = byId("num-followees-pluralize");
+    const numFolloweesPluralize = followNum === 1 ? "person" : "people";
+    if (numFolloweesPluralize !== numFolloweesPluralizeDiv.innerText) {
+        numFolloweesPluralizeDiv.clearChildren();
+        numFolloweesPluralizeDiv.appendText(numFolloweesPluralize);
+    }
 }

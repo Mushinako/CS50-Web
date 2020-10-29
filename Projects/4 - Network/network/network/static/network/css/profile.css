@@ -1,22 +1,16 @@
-.followed-button,
-.unfollowed-button {
+.follow-button {
+    display: inline-block;
     border-radius: 1rem;
     padding: 0.5rem 1rem;
-}
-
-.followed-button.button-visible,
-.unfollowed-button.button-visible {
-    display: inline-block;
+    color: white;
 }
 
 .followed-button {
     background-color: darkred;
-    color: white;
 }
 
 .unfollowed-button {
     background-color: darkcyan;
-    color: white;
 }
 
 .num-followers,

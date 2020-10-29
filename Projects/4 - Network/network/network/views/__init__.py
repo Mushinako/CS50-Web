@@ -1,3 +1,3 @@
 from .auth import login_view, logout_view, register
-from .posts import index, get_post, like_unlike, new_post
+from .posts import edit_post, edit_view, get_post, index, like_unlike
 from .users import follow, following, profile
