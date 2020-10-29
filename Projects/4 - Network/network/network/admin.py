@@ -7,17 +7,24 @@ from .models import Follow, Like, Post, User
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = [field.name for field in User._meta.fields
-                    if field.name != "password"]
-    list_editable = [field.name for field in User._meta.fields
-                     if field.name not in ("id", "creation_time", "password")]
+    list_display = [
+        field.name for field in User._meta.fields if field.name != "password"
+    ]
+    list_editable = [
+        field.name
+        for field in User._meta.fields
+        if field.name not in ("id", "creation_time", "password")
+    ]
 
 
 def createModelAdmin(cls: models.Model) -> admin.ModelAdmin:
     class ClsAdmin(admin.ModelAdmin):
         list_display = [field.name for field in cls._meta.fields]
-        list_editable = [field.name for field in cls._meta.fields
-                         if field.name not in ("id", "creation_time")]
+        list_editable = [
+            field.name
+            for field in cls._meta.fields
+            if field.name not in ("id", "creation_time")
+        ]
 
     return ClsAdmin
 
