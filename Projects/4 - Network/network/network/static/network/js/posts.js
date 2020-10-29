@@ -35,7 +35,7 @@ async function renderPost(startTime) {
         searchParamsDict.users = users.join(",");
     }
     const searchParams = new URLSearchParams(searchParamsDict);
-    const responseUnchecked = await fetch(`posts?${searchParams}`, {
+    const responseUnchecked = await fetch(`/posts?${searchParams}`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -68,7 +68,10 @@ function newPostDiv(post, loggedIn) {
     // User
     const usernameDiv = newEl("div", ["post-username"]);
     postDiv.appendChild(usernameDiv);
-    usernameDiv.appendText(post.username);
+    const usernameLink = newEl("a");
+    usernameDiv.appendChild(usernameLink);
+    usernameLink.href = `/users/profile/${post.username}`;
+    usernameLink.appendText(post.username);
     // Content
     const contentDiv = newEl("div", ["post-content"]);
     postDiv.appendChild(contentDiv);
@@ -87,19 +90,19 @@ function newPostDiv(post, loggedIn) {
     // Likes
     const likesDiv = newEl("div", ["post-likes"]);
     postDiv.appendChild(likesDiv);
-    const likeButtonDiv = newEl("div", ["post-like-button"]);
-    likesDiv.appendChild(likeButtonDiv);
-    likeButtonDiv.dataset.id = `${post.id}`;
-    likeButtonDiv.dataset.liked = post.liked ? "1" : "0";
-    if (post.liked) {
-        likeButtonDiv.appendChild(likedSvg.cloneNode(true));
-        likeButtonDiv.classList.add("post-liked-button");
-    }
-    else {
-        likeButtonDiv.appendChild(unlikedSvg.cloneNode(true));
-        likeButtonDiv.classList.add("post-unliked-button");
-    }
     if (loggedIn) {
+        const likeButtonDiv = newEl("div", ["post-like-button"]);
+        likesDiv.appendChild(likeButtonDiv);
+        likeButtonDiv.dataset.id = `${post.id}`;
+        likeButtonDiv.dataset.liked = post.liked ? "1" : "0";
+        if (post.liked) {
+            likeButtonDiv.appendChild(likedSvg.cloneNode(true));
+            likeButtonDiv.classList.add("post-liked-button");
+        }
+        else {
+            likeButtonDiv.appendChild(unlikedSvg.cloneNode(true));
+            likeButtonDiv.classList.add("post-unliked-button");
+        }
         likeButtonDiv.classList.add("div-button");
         likeButtonDiv.addEventListener("click", likedButtonClickListener);
     }
@@ -144,7 +147,7 @@ async function likedButtonClickListener() {
     const csrfToken = getCsrfToken();
     if (csrfToken === null)
         return;
-    const responseUnchecked = await fetch("like", {
+    const responseUnchecked = await fetch("/like", {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",

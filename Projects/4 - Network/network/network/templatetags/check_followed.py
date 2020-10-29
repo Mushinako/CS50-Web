@@ -14,4 +14,4 @@ def followed_class(follower: User, followee: User, reverse: bool) -> str:
         Follow.objects.get(follower=follower, followee=followee)
     except Follow.DoesNotExist:
         reverse = not reverse
-    return " " + (HIDDEN_CLASS_NAME if reverse else VISIBLE_CLASS_NAME)
+    return HIDDEN_CLASS_NAME if reverse else VISIBLE_CLASS_NAME
