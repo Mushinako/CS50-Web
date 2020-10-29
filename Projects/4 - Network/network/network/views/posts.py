@@ -29,6 +29,7 @@ def post_json(post: Post, user: User) -> Dict:
         "id": post.id,
         "username": post.author.username,
         "content": post.content,
+        "isAuthor": post.author == user,
         "creationTime": str(post.creation_time),
         "editTime": str(post.last_edit_time) if post.is_edited else None,
         "liked": liked,
@@ -100,6 +101,7 @@ def edit_view(request: HttpRequest) -> HttpResponse:
     """
     Post edit view
      - request method not GET : 400
+     - user not author        : 403
      - No post matching id_   : 400
     """
     if request.method != "GET":
@@ -117,6 +119,13 @@ def edit_view(request: HttpRequest) -> HttpResponse:
             post = Post.objects.get(id=id_)
         except Post.DoesNotExist:
             return JsonResponse({"err": f"{id_} is not a valid post id"}, status=400)
+        if post.author != request.user:
+            return JsonResponse(
+                {
+                    "err": "You aren't the author of this post.",
+                },
+                status=403,
+            )
         return render(
             request,
             "network/edit.html",

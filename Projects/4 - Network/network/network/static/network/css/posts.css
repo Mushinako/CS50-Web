@@ -7,7 +7,8 @@
     font-weight: bold;
 }
 
-.post-username a {
+.post-username a,
+.post-edit a {
     color: inherit;
     text-decoration: none;
 }
@@ -22,6 +23,11 @@
 .post-time {
     color: gray;
     font-size: small;
+}
+
+.post-edit a {
+    font-size: small;
+    font-weight: bold;
 }
 
 .post-likes>* {

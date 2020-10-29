@@ -76,6 +76,15 @@ function newPostDiv(post, loggedIn) {
     const contentDiv = newEl("div", ["post-content"]);
     postDiv.appendChild(contentDiv);
     contentDiv.appendText(post.content);
+    // Edit
+    if (post.isAuthor) {
+        const editDiv = newEl("div", ["post-edit"]);
+        postDiv.appendChild(editDiv);
+        const editLink = newEl("a");
+        editDiv.appendChild(editLink);
+        editLink.appendText("Edit");
+        editLink.href = `/posts/edit?id_=${post.id}`;
+    }
     // Time
     const timeDiv = newEl("div", ["post-time"]);
     postDiv.appendChild(timeDiv);

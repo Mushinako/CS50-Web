@@ -26,6 +26,7 @@ interface PostData {
     id: number,
     username: string,
     content: string,
+    isAuthor: boolean,
     creationTime: string,
     editTime: string | null,
     liked: boolean,
