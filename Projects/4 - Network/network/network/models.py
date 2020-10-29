@@ -4,11 +4,12 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    followers = models.ManyToManyField(
+    followees = models.ManyToManyField(
         "self",
-        related_name="followees",
+        related_name="followers",
         symmetrical=False,
         through="Follow",
+        through_fields=("follower", "followee"),
         blank=True,
     )
 

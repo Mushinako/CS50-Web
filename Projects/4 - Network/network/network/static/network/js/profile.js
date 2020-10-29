@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 async function followButtonListener(username, currentStatus) {
-    const followNumSpan = byId("num-followees");
+    const followNumSpan = byId("num-followers");
     let followNum = +followNumSpan.innerText;
     if (isNaN(followNum)) {
         console.error(`${followNumSpan.innerText} is not a number`);
@@ -58,7 +58,7 @@ async function followButtonListener(username, currentStatus) {
     followButtonDiv.addEventListener("click", () => followButtonListener(username, !currentStatus));
     followNumSpan.clearChildren();
     followNumSpan.appendText(`${followNum}`);
-    const numFolloweesPluralizeDiv = byId("num-followees-pluralize");
+    const numFolloweesPluralizeDiv = byId("num-followers-pluralize");
     const numFolloweesPluralize = followNum === 1 ? "person" : "people";
     if (numFolloweesPluralize !== numFolloweesPluralizeDiv.innerText) {
         numFolloweesPluralizeDiv.clearChildren();

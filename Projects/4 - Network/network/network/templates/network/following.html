@@ -1,6 +1,5 @@
 {% extends "network/layout.html" %}
 
-{% load check_followed %}
 {% load static %}
 
 {% block head %}
@@ -19,7 +18,7 @@
             {% include "network/includes/posts/post-container.html" %}
         {% else %}
             <div class="post-container">
-                <div class="no-followers empty-list">No followers yet</div>
+                <div class="no-followers empty-list">No followings yet</div>
             </div>
         {% endif %}
     </div>
