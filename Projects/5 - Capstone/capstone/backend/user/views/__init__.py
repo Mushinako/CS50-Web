@@ -1,1 +1,1 @@
-from . import auth, front
+from . import auth
