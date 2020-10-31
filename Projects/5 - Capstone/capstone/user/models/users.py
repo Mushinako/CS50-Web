@@ -44,6 +44,6 @@ class Attempt(models.Model):
     problem = models.ForeignKey(
         "lettershuffle.Puzzle", on_delete=models.CASCADE, related_name="solve_stats"
     )
-    time = models.DecimalField(decimal_places=3)
+    time = models.PositiveIntegerField()
     try_num = models.PositiveIntegerField()
     solved = models.BooleanField(default=False)

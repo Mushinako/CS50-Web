@@ -9,7 +9,7 @@ class PuzzleAdmin(admin.ModelAdmin):
     list_editable = [
         field.name
         for field in Puzzle._meta.fields
-        if field.name not in ("id", "creation_time", "uuid_")
+        if field.name not in ("id", "creation_time", "uuid")
     ]
 
 

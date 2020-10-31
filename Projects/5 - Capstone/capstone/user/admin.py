@@ -9,7 +9,7 @@ class AccessAdmin(admin.ModelAdmin):
     list_editable = [
         field.name
         for field in Access._meta.fields
-        if field.name not in ("id", "creation_time")
+        if field.name not in ("id", "creation_time", "access_time")
     ]
 
 
