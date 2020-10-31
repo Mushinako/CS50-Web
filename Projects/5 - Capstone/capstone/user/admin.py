@@ -1,7 +1,25 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models.users import User
+from .models.users import Access, Attempt, User
+
+
+class AccessAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Access._meta.fields]
+    list_editable = [
+        field.name
+        for field in Access._meta.fields
+        if field.name not in ("id", "creation_time")
+    ]
+
+
+class AttemptAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Attempt._meta.fields]
+    list_editable = [
+        field.name
+        for field in Attempt._meta.fields
+        if field.name not in ("id", "creation_time")
+    ]
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -15,4 +33,6 @@ class UserAdmin(admin.ModelAdmin):
     ]
 
 
+admin.site.register(Access, AccessAdmin)
+admin.site.register(Attempt, AttemptAdmin)
 admin.site.register(User, UserAdmin)
