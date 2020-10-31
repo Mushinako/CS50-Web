@@ -81,6 +81,7 @@ def register_api(req: HttpRequest) -> HttpResponse:
     Register form post handler
      - Method not POST       : 405
      - Confirmation not match: 400
+     - Username already taken: 400
      - Register success      : 201
     """
     if req.method != "POST":
