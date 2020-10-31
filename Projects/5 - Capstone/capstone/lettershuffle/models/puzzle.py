@@ -3,6 +3,8 @@ from django.db import models
 
 
 class Puzzle(models.Model):
+    """"""
+
     name = models.TextField()
     bio_url = models.URLField()
     img_url = models.URLField(blank=True)
