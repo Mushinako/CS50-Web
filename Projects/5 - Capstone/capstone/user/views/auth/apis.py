@@ -15,10 +15,7 @@ def login_api(req: HttpRequest) -> JsonResponse:
     """
     if req.method != "POST":
         return JsonResponse(
-            {
-                "success": False,
-                "msg": f"Expected request method: POST ; got {req.method}.",
-            },
+            {"msg": f"Expected request method POST; got {req.method}."},
             status=405,
         )
     next_ = req.GET.get("next", None)
@@ -31,16 +28,12 @@ def login_api(req: HttpRequest) -> JsonResponse:
     # Check if authentication successful
     if user is None:
         return JsonResponse(
-            {
-                "success": False,
-                "msg": "Invalid username and/or password.",
-            },
+            {"msg": "Invalid username and/or password."},
             status=403,
         )
     login(req, user)
     return JsonResponse(
         {
-            "success": True,
             "msg": "Success.",
             "next_": next_,
         },
@@ -56,10 +49,7 @@ def logout_api(req: HttpRequest) -> JsonResponse:
     """
     if req.method != "POST":
         return JsonResponse(
-            {
-                "success": False,
-                "msg": f"Expected request method: POST ; got {req.method}.",
-            },
+            {"msg": f"Expected request method POST; got {req.method}."},
             status=405,
         )
     next_ = req.GET.get("next", None)
@@ -68,7 +58,6 @@ def logout_api(req: HttpRequest) -> JsonResponse:
     logout(req)
     return JsonResponse(
         {
-            "success": True,
             "msg": "Success.",
             "next_": next_,
         },
@@ -86,10 +75,7 @@ def register_api(req: HttpRequest) -> HttpResponse:
     """
     if req.method != "POST":
         return JsonResponse(
-            {
-                "success": False,
-                "msg": f"Expected request method: POST ; got {req.method}.",
-            },
+            {"msg": f"Expected request method POST; got {req.method}."},
             status=405,
         )
     next_ = req.GET.get("next", None)
@@ -104,10 +90,7 @@ def register_api(req: HttpRequest) -> HttpResponse:
     confirmation = req.POST["confirmation"]
     if password != confirmation:
         return JsonResponse(
-            {
-                "success": False,
-                "msg": "Password does not match confirmation.",
-            },
+            {"msg": "Password does not match confirmation."},
             status=400,
         )
 
@@ -117,16 +100,12 @@ def register_api(req: HttpRequest) -> HttpResponse:
         user.save()
     except IntegrityError:
         return JsonResponse(
-            {
-                "success": False,
-                "message": "Username already taken.",
-            },
+            {"message": "Username already taken."},
             status=400,
         )
     login(req, user)
     return JsonResponse(
         {
-            "success": True,
             "msg": "Success.",
             "next_": next_,
         },

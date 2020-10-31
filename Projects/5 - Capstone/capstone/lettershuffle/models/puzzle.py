@@ -7,6 +7,6 @@ class Puzzle(models.Model):
     """"""
 
     name = models.TextField()
-    bio_url = models.URLField()
+    details = models.TextField()
     img_url = models.URLField(blank=True)
     uuid = models.UUIDField(default=uuid4, editable=False)
