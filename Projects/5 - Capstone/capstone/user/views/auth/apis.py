@@ -1,7 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.urls import reverse
 
 from ...models.users import User
