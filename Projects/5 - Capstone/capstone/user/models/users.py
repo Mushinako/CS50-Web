@@ -10,11 +10,17 @@ class User(AbstractUser):
     Additional fields:
     """
 
-    accessed = models.ManyToManyField(
-        "lettershuffle.Puzzle", related_name="accessed_by", through="Access", blank=True
+    accessed_problems = models.ManyToManyField(
+        "lettershuffle.Puzzle",
+        related_name="accessed_by",
+        through="Access",
+        blank=True,
     )
-    solved = models.ManyToManyField(
-        "lettershuffle.Puzzle", related_name="solved_by", through="Attempt", blank=True
+    attempted_problems = models.ManyToManyField(
+        "lettershuffle.Puzzle",
+        related_name="attempted_by",
+        through="Attempt",
+        blank=True,
     )
 
 
@@ -22,10 +28,14 @@ class Access(models.Model):
     """"""
 
     accessor = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="access_stats"
+        User,
+        on_delete=models.CASCADE,
+        related_name="accesses",
     )
     problem = models.ForeignKey(
-        "lettershuffle.Puzzle", on_delete=models.CASCADE, related_name="access_stats"
+        "lettershuffle.Puzzle",
+        on_delete=models.CASCADE,
+        related_name="accesses",
     )
     access_time = models.DateTimeField(editable=False)
 
@@ -38,11 +48,15 @@ class Access(models.Model):
 class Attempt(models.Model):
     """"""
 
-    solver = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="solve_stats"
+    attempter = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="attempts",
     )
     problem = models.ForeignKey(
-        "lettershuffle.Puzzle", on_delete=models.CASCADE, related_name="solve_stats"
+        "lettershuffle.Puzzle",
+        on_delete=models.CASCADE,
+        related_name="attempts",
     )
     time = models.PositiveIntegerField()
     try_num = models.PositiveIntegerField()
