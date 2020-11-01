@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig-base.json",
+    "compilerOptions": {
+        "outDir": "./lettershuffle/static/lettershuffle/js/"
+    },
+    "include": [
+        "./lettershuffle/static/lettershuffle/ts/**/*.ts"
+    ]
+}

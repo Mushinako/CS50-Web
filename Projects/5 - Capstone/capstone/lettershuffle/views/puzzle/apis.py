@@ -121,7 +121,7 @@ def puzzle_new_api(req: HttpRequest) -> JsonResponse:
     """
     if req.method != "POST":
         return JsonResponse(
-            {"msg": f"Expected request method POST ; got {req.method}."},
+            {"msg": f"Expected request method POST; got {req.method}."},
             status=405,
         )
     name = req.POST.get("name", None)
