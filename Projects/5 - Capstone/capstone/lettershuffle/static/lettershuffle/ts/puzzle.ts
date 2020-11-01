@@ -1,20 +1,13 @@
-let welcomeDiv: HTMLDivElement;
-let letterShuffleTitleDiv: HTMLDivElement;
-let puzzleGetForm: HTMLFormElement;
+function assemblePuzzle(puzzle: string): HTMLDivElement {
+    const puzzleArr = [...puzzle.toUpperCase()];
+    puzzleArr.shuffle();
 
-let puzzleDiv: HTMLDivElement;
-
-document.addEventListener("DOMContentLoaded", (): void => {
-    welcomeDiv = <HTMLDivElement>byId("welcome")!;
-    letterShuffleTitleDiv = <HTMLDivElement>byId("letter-shuffle-title")!;
-    puzzleGetForm = <HTMLFormElement>byId("puzzle-get")!;
-    puzzleDiv = <HTMLDivElement>byId("puzzle")!;
-});
-
-async function assembleTitle(titleString: string): Promise<void> {
-    for (const char of titleString) {
+    const parentDiv = newEl("div", ["letter-box-container"]);
+    for (const char of puzzleArr) {
         const div = newEl("div", ["letter-box"]);
+        parentDiv.appendChild(div);
         div.appendText(char);
-        letterShuffleTitleDiv.appendChild(div);
     }
+
+    return parentDiv;
 }

@@ -1,5 +1,14 @@
 "use strict";
 /**
+ * Shuffle array using Fisher-Yates
+ */
+Array.prototype.shuffle = function () {
+    for (let i = this.length - 1; i > 0; --i) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this[i], this[j]] = [this[j], this[i]];
+    }
+};
+/**
  * Append text to Div
  * @param {string} str - The string to be appended
  */
@@ -34,8 +43,3 @@ function newEl(tag, classes) {
     }
     return el;
 }
-/**
- * Awaitable setTimeOut
- * @param {number} ms - Amount of time to be waited
- */
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));

@@ -28,10 +28,72 @@ body {
   animation: fadeIn 1s;
 }
 
+.letter-box-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.letter-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: brown;
+  color: white;
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0.1em;
+  border: 0.1em solid brown;
+  border-radius: 0.5em;
+  font-family: "Courier New", Courier, monospace;
+  font-size: xxx-large;
+}
+
+.text-input {
+  display: block;
+  width: 70%;
+  margin: 0.1em;
+  border: 0.1em solid gray;
+  border-radius: 1.25em;
+  padding: 0.5em;
+  font-size: xx-large;
+  font-family: "Courier New", Courier, monospace;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.submit {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  background-color: green;
+  width: 2.5em;
+  height: 2.5em;
+  margin: 0.1em;
+  border: 0.1em solid green;
+  border-radius: 1.25em;
+  font-size: xx-large;
+}
+
+.material-icons {
+  font-size: xx-large;
+  color: white;
+}
+
 #welcome {
   z-index: 1;
 }
 
 #letter-shuffle-title {
   font-size: xxx-large;
+  margin: 0.5em 0;
+}
+
+#form {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
 }

@@ -1,18 +1,12 @@
 "use strict";
-let welcomeDiv;
-let letterShuffleTitleDiv;
-let puzzleGetForm;
-let puzzleDiv;
-document.addEventListener("DOMContentLoaded", () => {
-    welcomeDiv = byId("welcome");
-    letterShuffleTitleDiv = byId("letter-shuffle-title");
-    puzzleGetForm = byId("puzzle-get");
-    puzzleDiv = byId("puzzle");
-});
-async function assembleTitle(titleString) {
-    for (const char of titleString) {
+function assemblePuzzle(puzzle) {
+    const puzzleArr = [...puzzle.toUpperCase()];
+    puzzleArr.shuffle();
+    const parentDiv = newEl("div", ["letter-box-container"]);
+    for (const char of puzzleArr) {
         const div = newEl("div", ["letter-box"]);
+        parentDiv.appendChild(div);
         div.appendText(char);
-        letterShuffleTitleDiv.appendChild(div);
     }
+    return parentDiv;
 }

@@ -1,20 +1,18 @@
+{% extends 'base-lettershuffle.html' %}
 {% load static %}
 
 {% block head %}
+    <link rel="stylesheet" href="{% static 'lettershuffle/css/common.css' %}">
     <link rel="stylesheet" href="{% static 'lettershuffle/css/puzzle.css' %}">
 {% endblock head %}
 
 {% block body %}
     <div class="welcome fade-in" id="welcome">
-        <div>
+        <div class="container">
             <div id="letter-shuffle-title"></div>
-            <form action="{% url 'puzzle-get-api' %}" method="get" id="puzzle-get">
-                <div id="uuid-container">
-                    <input type="text" name="uuid" id="uuid">
-                </div>
-                <div id="submit-container">
-                    <input type="submit" value="">
-                </div>
+            <form id="form">
+                <input type="text" name="text-input" class="text-input" id="text-input">
+                <button type="submit" class="submit"><i class="material-icons">send</i></button>
             </form>
         </div>
     </div>
@@ -25,5 +23,7 @@
 {% endblock body %}
 
 {% block scripts %}
+    <script src="{% static 'lettershuffle/js/util.js' %}"></script>
     <script src="{% static 'lettershuffle/js/puzzle.js' %}"></script>
+    <script src="{% static 'lettershuffle/js/title.js' %}"></script>
 {% endblock scripts %}
