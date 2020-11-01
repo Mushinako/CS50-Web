@@ -1,3 +1,11 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
 body {
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
@@ -16,9 +24,12 @@ body {
   text-align: center;
 }
 
-#welcome,
-#puzzle {
-  visibility: hidden;
+.fade-in {
+  animation: fadeIn 1s;
+}
+
+#welcome {
+  z-index: 1;
 }
 
 #letter-shuffle-title {
