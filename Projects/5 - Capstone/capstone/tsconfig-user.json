@@ -1,9 +1,0 @@
-{
-    "extends": "./tsconfig-base.json",
-    "compilerOptions": {
-        "outDir": "./user/static/user/js/"
-    },
-    "include": [
-        "./user/static/user/ts/**/*.ts"
-    ]
-}

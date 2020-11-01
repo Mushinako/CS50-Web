@@ -13,8 +13,22 @@
     align-items: center;
 }
 
-.welcome {
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.welcome,
+.puzzle {
     @include full-page;
     @include center-container;
     text-align: center;
+}
+
+#welcome,
+#puzzle {
+    visibility: hidden;
+}
+
+#letter-shuffle-title {
+    font-size: xxx-large;
 }

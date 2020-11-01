@@ -1,16 +1,20 @@
 {% load static %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'lettershuffle/sass/puzzle.scss' %}">
+    <link rel="stylesheet" href="{% static 'lettershuffle/css/puzzle.css' %}">
 {% endblock head %}
 
 {% block body %}
     <div class="welcome" id="welcome">
         <div>
-            <h1>Letter Shuffle</h1>
+            <div id="letter-shuffle-title"></div>
             <form action="{% url 'puzzle-get-api' %}" method="get" id="puzzle-get">
-                <input type="text" name="uuid" id="uuid">
-                <input type="submit" value="">
+                <div id="uuid-container">
+                    <input type="text" name="uuid" id="uuid">
+                </div>
+                <div id="submit-container">
+                    <input type="submit" value="">
+                </div>
             </form>
         </div>
     </div>
