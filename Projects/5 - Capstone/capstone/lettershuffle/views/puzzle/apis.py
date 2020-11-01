@@ -5,7 +5,7 @@ from typing import Dict
 from django.http import HttpRequest, JsonResponse
 
 from ...models.puzzle import Puzzle
-from ....user.models.users import User
+from user.models.users import User
 
 
 def puzzle_play_info(puzzle: Puzzle) -> Dict[str, str]:
