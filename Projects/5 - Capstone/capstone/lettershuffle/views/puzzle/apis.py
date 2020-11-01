@@ -4,7 +4,7 @@ from typing import Dict
 
 from django.http import HttpRequest, JsonResponse
 
-from ...models.puzzle import Puzzle
+from lettershuffle.models.puzzle import Puzzle
 from user.models.users import User
 
 
