@@ -31,6 +31,12 @@ Node.prototype.clearChildren = function () {
  */
 const byId = (id) => document.getElementById(id);
 /**
+ * Shorthand for `document.getElementsByClassName`
+ * @param {string} cls                  - Class name of the elements
+ * @returns {HTMLCollectionOf<Element>} - The elements with given class name
+ */
+const byCls = (cls) => document.getElementsByClassName(cls);
+/**
  * Create a new element with given tag and classes
  * @param {keyof HTMLElementTagNameMap} tag - Tag name
  * @param {string[]?} classes               - Optional classes
@@ -59,7 +65,7 @@ const closestInArray = (arr, val) => arr.reduce((prev, cur) => Math.abs(cur - va
 function smallestElementAfter(arr, val) {
     arr = [...new Set(arr)].sort();
     for (const el of arr) {
-        if (val <= el) {
+        if (val < el) {
             return el;
         }
     }

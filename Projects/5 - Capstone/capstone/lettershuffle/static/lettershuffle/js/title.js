@@ -3,12 +3,14 @@ let welcomeDiv;
 let letterShuffleTitleDiv;
 let formForm;
 let answerDiv;
+let submitBtn;
 let puzzleDiv;
 document.addEventListener("DOMContentLoaded", () => {
     welcomeDiv = byId("welcome");
     letterShuffleTitleDiv = byId("letter-shuffle-title");
     formForm = byId("form");
     answerDiv = byId("answer");
+    submitBtn = byId("submit");
     puzzleDiv = byId("puzzle");
     assembleTitle("LetterShuffle");
     addDrop(answerDiv);
@@ -17,7 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const letterDivs = [...answerDiv.childNodes];
         const answer = letterDivs.map((val) => val.innerText).join("");
         if (answer === "LetterShuffle".toUpperCase()) { }
-        else { }
+        else {
+            submitBtn.classList.add("failure");
+        }
     }
     formForm.addEventListener("submit", welcomeSubmit);
 });

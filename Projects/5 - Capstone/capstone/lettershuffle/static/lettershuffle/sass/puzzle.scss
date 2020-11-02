@@ -57,6 +57,30 @@ $large: 1200px;
     }
 }
 
+@keyframes success {
+    0% {
+        background-color: darkgreen;
+        border-color: darkgreen;
+    }
+
+    100% {
+        background-color: darkblue;
+        border-color: darkblue;
+    }
+}
+
+@keyframes failure {
+    0% {
+        background-color: darkred;
+        border-color: darkred;
+    }
+
+    100% {
+        background-color: darkblue;
+        border-color: darkblue;
+    }
+}
+
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -82,19 +106,20 @@ body {
 .letter-box {
     @include bigger-text;
     @include center-flex;
-    background-color: brown;
     color: white;
     width: 1.5em;
     height: 1.5em;
     margin: 0.1em;
-    border: 0.1em solid brown;
+    border-width: 0.1em;
+    border-style: solid;
     border-radius: 0.5em;
     font-family: 'Courier New', Courier, monospace;
 }
 
 .letter-box.ghost {
     background-color: transparent;
-    border: 0.1em dashed brown;
+    border-style: dashed;
+    border-color: black;
 }
 
 .dragged {
@@ -117,12 +142,20 @@ body {
 .submit {
     @include center-container;
     @include big-text;
-    background-color: green;
+    background-color: darkblue;
     width: 3em;
     height: 3em;
     margin: 0.1em;
-    border: 0.1em solid green;
+    border: 0.1em solid darkblue;
     border-radius: 1.5em;
+}
+
+.success {
+    animation: success 2s ease;
+}
+
+.failure {
+    animation: failure 2s ease;
 }
 
 .material-icons {

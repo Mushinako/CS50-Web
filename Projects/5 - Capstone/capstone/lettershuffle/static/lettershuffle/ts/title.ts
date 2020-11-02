@@ -2,6 +2,7 @@ let welcomeDiv: HTMLDivElement;
 let letterShuffleTitleDiv: HTMLDivElement;
 let formForm: HTMLFormElement;
 let answerDiv: HTMLDivElement;
+let submitBtn: HTMLButtonElement;
 
 let puzzleDiv: HTMLDivElement;
 
@@ -10,6 +11,7 @@ document.addEventListener("DOMContentLoaded", (): void => {
     letterShuffleTitleDiv = <HTMLDivElement>byId("letter-shuffle-title")!;
     formForm = <HTMLFormElement>byId("form")!;
     answerDiv = <HTMLDivElement>byId("answer")!;
+    submitBtn = <HTMLButtonElement>byId("submit")!;
     puzzleDiv = <HTMLDivElement>byId("puzzle")!;
 
     assembleTitle("LetterShuffle");
@@ -21,7 +23,9 @@ document.addEventListener("DOMContentLoaded", (): void => {
 
         const letterDivs = [...answerDiv.childNodes];
         const answer = letterDivs.map((val: ChildNode): string => (<HTMLDivElement>val).innerText).join("");
-        if (answer === "LetterShuffle".toUpperCase()) { } else { }
+        if (answer === "LetterShuffle".toUpperCase()) { } else {
+            submitBtn.classList.add("failure");
+        }
     }
 
     formForm.addEventListener("submit", welcomeSubmit);

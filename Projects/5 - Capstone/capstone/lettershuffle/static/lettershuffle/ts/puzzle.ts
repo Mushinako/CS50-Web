@@ -18,6 +18,9 @@ function assemblePuzzle(puzzle: string): HTMLDivElement {
         div.appendText(char);
         div.id = `letter-${i}`;
         div.draggable = true;
+        const divColor = letter2Color(char);
+        div.style.backgroundColor = divColor;
+        div.style.borderColor = divColor;
 
         // ondragstart
         div.addEventListener("dragstart", (ev: DragEvent): void => {
@@ -25,6 +28,12 @@ function assemblePuzzle(puzzle: string): HTMLDivElement {
             offsetX = ev.offsetX;
             offsetY = ev.offsetY;
             div.classList.add("dragged");
+        });
+
+        // ondragend
+        div.addEventListener("dragend", (ev: DragEvent): void => {
+            div.classList.remove("dragged");
+            ghostNode.remove();
         });
     });
 
@@ -44,9 +53,7 @@ function addDrop(el: HTMLElement): void {
 
         const id: string = ev.dataTransfer!.getData("text");
         const node = byId(id)!;
-        el.removeChild(ghostNode);
         putDropDiv(ev, el, node);
-        node.classList.remove("dragged");
     });
 
     // ondragover
@@ -54,15 +61,6 @@ function addDrop(el: HTMLElement): void {
         ev.preventDefault();
 
         putDropDiv(ev, el, ghostNode);
-    });
-
-    // ondragleave
-    el.addEventListener("dragleave", (ev: DragEvent): void => {
-        ev.preventDefault();
-
-        if (ghostNode.parentNode === el) {
-            el.removeChild(ghostNode);
-        }
     });
 }
 
@@ -78,13 +76,21 @@ function putDropDiv(ev: DragEvent, el: HTMLElement, childEl: HTMLElement): void 
     const divPositions = children.map((val: ChildNode): DOMRect => (<HTMLDivElement>val).getBoundingClientRect());
     // Rows
     const divPositionRows = [...new Set(divPositions.map((val: DOMRect): number => val.top))];
+    const ghostNodePosition = ghostNode.getBoundingClientRect();
+    if (ghostNodePosition.width !== 0) {
+        const maxPositionRow = Math.max(...divPositionRows);
+        if (ghostNodePosition.top > maxPositionRow && Math.abs(dropTop - ghostNodePosition.top) < Math.abs(dropTop - maxPositionRow)) {
+            el.appendChild(childEl);
+            return;
+        }
+    }
     const divPositionClosestRow = closestInArray(divPositionRows, dropTop);
     // Columns
     const divPositionCols = divPositions.filter((val: DOMRect): boolean => val.top === divPositionClosestRow).map((val: DOMRect): number => val.left);
     const divPositionNextCol = smallestElementAfter(divPositionCols, dropLeft);
     if (divPositionNextCol === null) {
         const divPositionNextRow = smallestElementAfter(divPositionRows, divPositionClosestRow);
-        if (divPositionClosestRow === null) {
+        if (divPositionNextRow === null) {
             // After last row; append to last
             el.appendChild(childEl);
         } else {
@@ -120,5 +126,21 @@ function putDropDiv(ev: DragEvent, el: HTMLElement, childEl: HTMLElement): void 
             return;
         }
         el.insertBefore(childEl, divAfter);
+    }
+}
+
+/**
+ * Convert letter to `hsl` color
+ * @param {string} letter - The letter to be converted
+ * @returns {string}      - CSS color string;
+ */
+function letter2Color(letter: string): string {
+    const code = letter.toUpperCase().charCodeAt(0);
+    if (code > 64 && code < 91) {
+        const alphabetIndex = code - 65;
+        const h = Math.ceil(alphabetIndex / 26 * 360);
+        return `hsl(${h}, 60%, 40%)`;
+    } else {
+        return "#000000";
     }
 }
