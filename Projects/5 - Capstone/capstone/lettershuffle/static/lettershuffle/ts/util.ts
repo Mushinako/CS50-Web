@@ -46,3 +46,41 @@ function newEl<K extends keyof HTMLElementTagNameMap>(tag: K, classes?: string[]
     }
     return el;
 }
+
+/**
+ * Find the closest number in an array to a number
+ * @param {number[]} arr - The array of number to check from
+ * @param {number} val   - The number to check with
+ * @returns {number}     - The closest number
+ */
+const closestInArray = (arr: number[], val: number): number => arr.reduce((prev: number, cur: number): number => Math.abs(cur - val) < Math.abs(prev - val) ? cur : prev);
+
+/**
+ * Find the smallest number no less than provided value in an array
+ * @param {number[]} arr - The number array to be checked
+ * @param {number} val   - The number to check
+ * @returns {number}     - The smallest satisfactory number
+ */
+function smallestElementAfter(arr: number[], val: number): number | null {
+    arr.sort();
+    for (const el of arr) {
+        if (val <= el) {
+            return el;
+        }
+    }
+    return null;
+}
+
+/**
+ * Simple function to check whether a number array is sorted
+ * @param {number[]} arr - The number array to be checked
+ * @returns {boolean}    - The result
+ */
+function arrayIsSorted(arr: number[]): boolean {
+    for (let i = 0; i < arr.length - 1; i++) {
+        if (arr[i] > arr[i + 1]) {
+            return false;
+        }
+    }
+    return true;
+}

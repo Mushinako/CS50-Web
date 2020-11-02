@@ -33,11 +33,15 @@ body {
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
+  min-height: 3em;
+  border: 0.1em solid brown;
+  border-radius: 0.5em;
 }
 
 .letter-box {
-  font-size: medium;
+  font-size: x-large;
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   background-color: brown;
@@ -49,37 +53,25 @@ body {
   border-radius: 0.5em;
   font-family: "Courier New", Courier, monospace;
 }
-@media (min-width: 576px) {
-  .letter-box {
-    font-size: large;
-  }
-}
 @media (min-width: 768px) {
-  .letter-box {
-    font-size: larger;
-  }
-}
-@media (min-width: 992px) {
-  .letter-box {
-    font-size: x-large;
-  }
-}
-@media (min-width: 1200px) {
   .letter-box {
     font-size: xx-large;
   }
 }
-@media (min-width: 1560px) {
+@media (min-width: 1200px) {
   .letter-box {
     font-size: xxx-large;
   }
 }
 
-.text-input {
-  font-size: small;
-  display: block;
+.answer {
+  font-size: larger;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
   width: 70%;
-  height: 3em;
+  min-height: 3em;
   margin: 0.1em;
   border: 0.1em solid gray;
   border-radius: 1.25em;
@@ -87,28 +79,13 @@ body {
   text-transform: uppercase;
   text-align: center;
 }
-@media (min-width: 576px) {
-  .text-input {
-    font-size: medium;
-  }
-}
 @media (min-width: 768px) {
-  .text-input {
-    font-size: large;
-  }
-}
-@media (min-width: 992px) {
-  .text-input {
-    font-size: larger;
-  }
-}
-@media (min-width: 1200px) {
-  .text-input {
+  .answer {
     font-size: x-large;
   }
 }
-@media (min-width: 1560px) {
-  .text-input {
+@media (min-width: 1200px) {
+  .answer {
     font-size: xx-large;
   }
 }
@@ -118,7 +95,7 @@ body {
   flex-flow: row nowrap;
   justify-content: center;
   align-items: center;
-  font-size: small;
+  font-size: larger;
   background-color: green;
   width: 3em;
   height: 3em;
@@ -126,57 +103,27 @@ body {
   border: 0.1em solid green;
   border-radius: 1.5em;
 }
-@media (min-width: 576px) {
-  .submit {
-    font-size: medium;
-  }
-}
 @media (min-width: 768px) {
-  .submit {
-    font-size: large;
-  }
-}
-@media (min-width: 992px) {
-  .submit {
-    font-size: larger;
-  }
-}
-@media (min-width: 1200px) {
   .submit {
     font-size: x-large;
   }
 }
-@media (min-width: 1560px) {
+@media (min-width: 1200px) {
   .submit {
     font-size: xx-large;
   }
 }
 
 .material-icons {
-  font-size: medium;
+  font-size: x-large;
   color: white;
 }
-@media (min-width: 576px) {
-  .material-icons {
-    font-size: large;
-  }
-}
 @media (min-width: 768px) {
-  .material-icons {
-    font-size: larger;
-  }
-}
-@media (min-width: 992px) {
-  .material-icons {
-    font-size: x-large;
-  }
-}
-@media (min-width: 1200px) {
   .material-icons {
     font-size: xx-large;
   }
 }
-@media (min-width: 1560px) {
+@media (min-width: 1200px) {
   .material-icons {
     font-size: xxx-large;
   }
@@ -187,30 +134,15 @@ body {
 }
 
 #letter-shuffle-title {
-  font-size: medium;
+  font-size: x-large;
   margin: 0.5em 0;
 }
-@media (min-width: 576px) {
-  #letter-shuffle-title {
-    font-size: large;
-  }
-}
 @media (min-width: 768px) {
-  #letter-shuffle-title {
-    font-size: larger;
-  }
-}
-@media (min-width: 992px) {
-  #letter-shuffle-title {
-    font-size: x-large;
-  }
-}
-@media (min-width: 1200px) {
   #letter-shuffle-title {
     font-size: xx-large;
   }
 }
-@media (min-width: 1560px) {
+@media (min-width: 1200px) {
   #letter-shuffle-title {
     font-size: xxx-large;
   }

@@ -43,3 +43,10 @@ function newEl(tag, classes) {
     }
     return el;
 }
+/**
+ * Find the closest number in an array to a number
+ * @param {number[]} arr - The array of number to check from
+ * @param {number} val   - The number to check with
+ * @returns {number}     - The closest number
+ */
+const closestInArray = (arr, val) => arr.reduce((prev, cur) => Math.abs(cur - val) < Math.abs(prev - val) ? cur : prev);
