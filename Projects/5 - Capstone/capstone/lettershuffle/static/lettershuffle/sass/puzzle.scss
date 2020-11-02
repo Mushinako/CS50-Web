@@ -1,3 +1,57 @@
+$x-small: 576px;
+$small: 768px;
+$medium: 992px;
+$large: 1200px;
+$x-large: 1560px;
+
+@mixin big-text {
+    font-size: small;
+
+    @media (min-width: $x-small) {
+        font-size: medium;
+    }
+
+    @media (min-width: $small) {
+        font-size: large;
+    }
+
+    @media (min-width: $medium) {
+        font-size: larger;
+    }
+
+    @media (min-width: $large) {
+        font-size: x-large;
+    }
+
+    @media (min-width: $x-large) {
+        font-size: xx-large;
+    }
+}
+
+@mixin bigger-text {
+    font-size: medium;
+
+    @media (min-width: $x-small) {
+        font-size: large;
+    }
+
+    @media (min-width: $small) {
+        font-size: larger;
+    }
+
+    @media (min-width: $medium) {
+        font-size: x-large;
+    }
+
+    @media (min-width: $large) {
+        font-size: xx-large;
+    }
+
+    @media (min-width: $x-large) {
+        font-size: xxx-large;
+    }
+}
+
 @mixin full-page {
     position: absolute;
     top: 0;
@@ -50,6 +104,7 @@ body {
 }
 
 .letter-box {
+    @include bigger-text;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,17 +116,16 @@ body {
     border: 0.1em solid brown;
     border-radius: 0.5em;
     font-family: 'Courier New', Courier, monospace;
-    font-size: xxx-large;
 }
 
 .text-input {
+    @include big-text;
     display: block;
     width: 70%;
+    height: 3em;
     margin: 0.1em;
     border: 0.1em solid gray;
     border-radius: 1.25em;
-    padding: 0.5em;
-    font-size: xx-large;
     font-family: 'Courier New', Courier, monospace;
     text-transform: uppercase;
     text-align: center;
@@ -79,17 +133,17 @@ body {
 
 .submit {
     @include center-container;
+    @include big-text;
     background-color: green;
-    width: 2.5em;
-    height: 2.5em;
+    width: 3em;
+    height: 3em;
     margin: 0.1em;
     border: 0.1em solid green;
-    border-radius: 1.25em;
-    font-size: xx-large;
+    border-radius: 1.5em;
 }
 
 .material-icons {
-    font-size: xx-large;
+    @include bigger-text;
     color: white;
 }
 
@@ -98,7 +152,7 @@ body {
 }
 
 #letter-shuffle-title {
-    font-size: xxx-large;
+    @include bigger-text;
     margin: 0.5em 0;
 }
 

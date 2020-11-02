@@ -7,6 +7,7 @@ function assemblePuzzle(puzzle: string): HTMLDivElement {
         const div = newEl("div", ["letter-box"]);
         parentDiv.appendChild(div);
         div.appendText(char);
+        div.draggable = true;
     }
 
     return parentDiv;
