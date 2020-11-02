@@ -50,3 +50,18 @@ function newEl(tag, classes) {
  * @returns {number}     - The closest number
  */
 const closestInArray = (arr, val) => arr.reduce((prev, cur) => Math.abs(cur - val) < Math.abs(prev - val) ? cur : prev);
+/**
+ * Find the smallest number no less than provided value in an array
+ * @param {number[]} arr - The number array to be checked
+ * @param {number} val   - The number to check
+ * @returns {number}     - The smallest satisfactory number
+ */
+function smallestElementAfter(arr, val) {
+    arr = [...new Set(arr)].sort();
+    for (const el of arr) {
+        if (val <= el) {
+            return el;
+        }
+    }
+    return null;
+}

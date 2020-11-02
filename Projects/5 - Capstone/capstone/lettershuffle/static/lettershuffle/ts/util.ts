@@ -62,25 +62,11 @@ const closestInArray = (arr: number[], val: number): number => arr.reduce((prev:
  * @returns {number}     - The smallest satisfactory number
  */
 function smallestElementAfter(arr: number[], val: number): number | null {
-    arr.sort();
+    arr = [...new Set(arr)].sort();
     for (const el of arr) {
         if (val <= el) {
             return el;
         }
     }
     return null;
-}
-
-/**
- * Simple function to check whether a number array is sorted
- * @param {number[]} arr - The number array to be checked
- * @returns {boolean}    - The result
- */
-function arrayIsSorted(arr: number[]): boolean {
-    for (let i = 0; i < arr.length - 1; i++) {
-        if (arr[i] > arr[i + 1]) {
-            return false;
-        }
-    }
-    return true;
 }

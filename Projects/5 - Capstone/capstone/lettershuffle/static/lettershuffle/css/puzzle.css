@@ -64,6 +64,15 @@ body {
   }
 }
 
+.letter-box.ghost {
+  background-color: transparent;
+  border: 0.1em dashed brown;
+}
+
+.dragged {
+  opacity: 0.5;
+}
+
 .answer {
   font-size: larger;
   display: flex;

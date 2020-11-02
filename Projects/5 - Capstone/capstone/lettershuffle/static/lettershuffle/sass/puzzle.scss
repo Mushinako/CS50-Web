@@ -92,6 +92,15 @@ body {
     font-family: 'Courier New', Courier, monospace;
 }
 
+.letter-box.ghost {
+    background-color: transparent;
+    border: 0.1em dashed brown;
+}
+
+.dragged {
+    opacity: 0.5;
+}
+
 .answer {
     @include big-text;
     @include center-flex;
