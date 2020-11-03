@@ -163,13 +163,6 @@ h1 {
   }
 }
 
-.numbering,
-.hint {
-  display: block;
-  height: 3em;
-  border-top: 0.1em solid gray;
-}
-
 #welcome {
   z-index: 1;
 }
@@ -194,11 +187,4 @@ h1 {
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-}
-
-#hints {
-  display: grid;
-  grid-template-columns: 3em auto;
-  margin-top: 1em;
-  padding: 2em 15%;
 }

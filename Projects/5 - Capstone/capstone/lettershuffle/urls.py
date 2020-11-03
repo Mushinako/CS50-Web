@@ -3,7 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.puzzle.views.puzzle_view, name="puzzle-view"),
+    path("", views.puzzle.views.welcome_view, name="welcome-view"),
+    path("puzzle", views.puzzle.views.puzzle_view, name="puzzle-view"),
     path(
         "api/lettershuffle/puzzle",
         views.puzzle.apis.puzzle_get_api,

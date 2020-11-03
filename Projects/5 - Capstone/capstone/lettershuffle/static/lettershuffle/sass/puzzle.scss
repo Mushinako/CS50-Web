@@ -157,13 +157,6 @@ h1 {
     color: white;
 }
 
-.numbering,
-.hint {
-    display: block;
-    height: 3em;
-    border-top: 0.1em solid gray;
-}
-
 #welcome {
     z-index: 1;
 }
@@ -175,11 +168,4 @@ h1 {
 
 #form {
     @include center-flex;
-}
-
-#hints {
-    display: grid;
-    grid-template-columns: 3em auto;
-    margin-top: 1em;
-    padding: 2em 15%;
 }
