@@ -5,11 +5,14 @@ const ghostNode = newEl("div", ["letter-box", "ghost"]);
 /**
  * Assemble the puzzle given the problem string
  * @param {string} puzzle    - The puzzle string
+ * @param {boolean} shuffle  - Whether to shuffle the characters
  * @returns {HTMLDivElement} - The div containing all the letters
  */
-function assemblePuzzle(puzzle) {
+function assemblePuzzle(puzzle, shuffle = true) {
     const puzzleArr = [...puzzle.toUpperCase()];
-    puzzleArr.shuffle();
+    if (shuffle) {
+        puzzleArr.shuffle();
+    }
     const parentDiv = newEl("div", ["letter-box-container"]);
     puzzleArr.forEach((char, i) => {
         const div = newEl("div", ["letter-box"]);
@@ -28,7 +31,7 @@ function assemblePuzzle(puzzle) {
             div.classList.add("dragged");
         });
         // ondragend
-        div.addEventListener("dragend", (ev) => {
+        div.addEventListener("dragend", () => {
             div.classList.remove("dragged");
             ghostNode.remove();
         });
@@ -130,9 +133,21 @@ function letter2Color(letter) {
     if (code > 64 && code < 91) {
         const alphabetIndex = code - 65;
         const h = Math.ceil(alphabetIndex / 26 * 360);
-        return `hsl(${h}, 60%, 40%)`;
+        return `hsl(${h}, 80%, 40%)`;
     }
     else {
         return "#000000";
     }
+}
+/**
+ * Mark submit as success/failure
+ * @param {string} clsName - The class name that indicates success/failure
+ */
+function markSubmitBtn(clsName) {
+    if (submitBtn.classList.contains(clsName))
+        return;
+    submitBtn.classList.add(clsName);
+    setTimeout(() => {
+        submitBtn.classList.remove(clsName);
+    }, 1000);
 }

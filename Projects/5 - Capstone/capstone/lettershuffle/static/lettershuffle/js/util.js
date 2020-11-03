@@ -63,7 +63,7 @@ const closestInArray = (arr, val) => arr.reduce((prev, cur) => Math.abs(cur - va
  * @returns {number}     - The smallest satisfactory number
  */
 function smallestElementAfter(arr, val) {
-    arr = [...new Set(arr)].sort();
+    arr = [...new Set(arr)].sort((a, b) => a - b);
     for (const el of arr) {
         if (val < el) {
             return el;

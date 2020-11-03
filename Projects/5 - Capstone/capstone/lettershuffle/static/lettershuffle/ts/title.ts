@@ -23,10 +23,15 @@ document.addEventListener("DOMContentLoaded", (): void => {
 
         const letterDivs = [...answerDiv.childNodes];
         const answer = letterDivs.map((val: ChildNode): string => (<HTMLDivElement>val).innerText).join("");
-        if (answer === "LetterShuffle".toUpperCase()) { } else {
-            submitBtn.classList.add("failure");
+        if (answer === "LetterShuffle".toUpperCase()) {
+            markSubmitBtn("success");
+            formForm.removeEventListener("submit", welcomeSubmit);
+        } else {
+            markSubmitBtn("failure");
         }
     }
+
+    function answerSubmit(ev: Event): void { }
 
     formForm.addEventListener("submit", welcomeSubmit);
 });

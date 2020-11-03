@@ -57,18 +57,6 @@ $large: 1200px;
     }
 }
 
-@keyframes success {
-    0% {
-        background-color: darkgreen;
-        border-color: darkgreen;
-    }
-
-    100% {
-        background-color: darkblue;
-        border-color: darkblue;
-    }
-}
-
 @keyframes failure {
     0% {
         background-color: darkred;
@@ -83,6 +71,10 @@ $large: 1200px;
 
 body {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+h1 {
+    font-size: xxx-large;
 }
 
 .welcome,
@@ -148,19 +140,28 @@ body {
     margin: 0.1em;
     border: 0.1em solid darkblue;
     border-radius: 1.5em;
+    cursor: pointer;
 }
 
 .success {
-    animation: success 2s ease;
+    background-color: darkgreen;
+    border-color: darkgreen;
 }
 
 .failure {
-    animation: failure 2s ease;
+    animation: failure 1s ease-in;
 }
 
 .material-icons {
     @include bigger-text;
     color: white;
+}
+
+.numbering,
+.hint {
+    display: block;
+    height: 3em;
+    border-top: 0.1em solid gray;
 }
 
 #welcome {
@@ -174,4 +175,11 @@ body {
 
 #form {
     @include center-flex;
+}
+
+#hints {
+    display: grid;
+    grid-template-columns: 3em auto;
+    margin-top: 1em;
+    padding: 2em 15%;
 }

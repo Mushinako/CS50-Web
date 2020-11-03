@@ -18,11 +18,15 @@ document.addEventListener("DOMContentLoaded", () => {
         ev.preventDefault();
         const letterDivs = [...answerDiv.childNodes];
         const answer = letterDivs.map((val) => val.innerText).join("");
-        if (answer === "LetterShuffle".toUpperCase()) { }
+        if (answer === "LetterShuffle".toUpperCase()) {
+            markSubmitBtn("success");
+            formForm.removeEventListener("submit", welcomeSubmit);
+        }
         else {
-            submitBtn.classList.add("failure");
+            markSubmitBtn("failure");
         }
     }
+    function answerSubmit(ev) { }
     formForm.addEventListener("submit", welcomeSubmit);
 });
 /**

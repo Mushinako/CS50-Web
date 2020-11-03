@@ -8,16 +8,24 @@
 {% block body %}
     <div class="welcome fade-in" id="welcome">
         <div class="container">
+            <h1>LetterShuffle</h1>
             <div id="letter-shuffle-title"></div>
             <form id="form">
                 <div class="answer" id="answer"></div>
-                <input type="hidden" name="answer">
                 <button type="submit" class="submit" id="submit"><i class="material-icons">send</i></button>
             </form>
+            <div id="hints">
+                <div class="numbering">Hint 1</div>
+                <div class="hint" id="hint-1"></div>
+                <div class="numbering">Hint 2</div>
+                <div class="hint" id="hint-2"></div>
+                <div class="numbering">Hint 3</div>
+                <div class="hint" id="hint-3"></div>
+            </div>
         </div>
     </div>
     <div class="puzzle" id="puzzle">
-        <div id="unused-letters-container"></div>
+        <div id="title"></div>
         <form action="{% url 'puzzle-check-api' %}" method="post" id="used-letters-container"></form>
     </div>
 {% endblock body %}
